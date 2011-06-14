@@ -34,12 +34,14 @@ BestInPlaceEditor.prototype = {
     var elem = this.isNil ? "" : this.element.html();
     this.oldValue = elem;
     $(this.activator).unbind("click", this.clickHandler);
+    if (this.toggle_activator) $(this.activator).hide();
     this.activateForm();
   },
 
   abort : function() {
     if (this.isNil) this.element.html(this.nil);
     else            this.element.html(this.oldValue);
+    if (this.toggle_activator) $(this.activator).show();
     $(this.activator).bind('click', {editor: this}, this.clickHandler);
   },
 
@@ -83,13 +85,14 @@ BestInPlaceEditor.prototype = {
     // Try parent supplied info
     var self = this;
     self.element.parents().each(function(){
-      self.url           = self.url           || jQuery(this).attr("data-url");
-      self.collection    = self.collection    || jQuery(this).attr("data-collection");
-      self.formType      = self.formType      || jQuery(this).attr("data-type");
-      self.objectName    = self.objectName    || jQuery(this).attr("data-object");
-      self.attributeName = self.attributeName || jQuery(this).attr("data-attribute");
-      self.nil           = self.nil           || jQuery(this).attr("data-nil");
-      self.inner_class   = self.inner_class   || jQuery(this).attr("data-inner-class");
+      self.url              = self.url              || jQuery(this).attr("data-url");
+      self.collection       = self.collection       || jQuery(this).attr("data-collection");
+      self.formType         = self.formType         || jQuery(this).attr("data-type");
+      self.objectName       = self.objectName       || jQuery(this).attr("data-object");
+      self.attributeName    = self.attributeName    || jQuery(this).attr("data-attribute");
+      self.nil              = self.nil              || jQuery(this).attr("data-nil");
+      self.inner_class      = self.inner_class      || jQuery(this).attr("data-inner-class");
+      self.toggle_activator = self.toggle_activator || jQuery(this).attr("data-toggle-activator");
     });
 
     // Try Rails-id based if parents did not explicitly supply something
@@ -101,15 +104,16 @@ BestInPlaceEditor.prototype = {
     });
 
     // Load own attributes (overrides all others)
-    self.url           = self.element.attr("data-url")          || self.url      || document.location.pathname;
-    self.collection    = self.element.attr("data-collection")   || self.collection;
-    self.formType      = self.element.attr("data-type")         || self.formtype || "input";
-    self.objectName    = self.element.attr("data-object")       || self.objectName;
-    self.attributeName = self.element.attr("data-attribute")    || self.attributeName;
-    self.activator     = self.element.attr("data-activator")    || self.element;
-    self.nil           = self.element.attr("data-nil")          || self.nil      || "-";
-    self.inner_class   = self.element.attr("data-inner-class")  || self.inner_class   || null;
-
+    self.url              = self.element.attr("data-url")              || self.url      || document.location.pathname;
+    self.collection       = self.element.attr("data-collection")       || self.collection;
+    self.formType         = self.element.attr("data-type")             || self.formtype || "input";
+    self.objectName       = self.element.attr("data-object")           || self.objectName;
+    self.attributeName    = self.element.attr("data-attribute")        || self.attributeName;
+    self.activator        = self.element.attr("data-activator")        || self.element;
+    self.nil              = self.element.attr("data-nil")              || self.nil      || "-";
+    self.inner_class      = self.element.attr("data-inner-class")      || self.inner_class   || null;
+    self.toggle_activator = self.element.attr("data-toggle-activator") || self.toggle_activator || null;
+    
     if (!self.element.attr("data-sanitize")) {
       self.sanitize = true;
     }

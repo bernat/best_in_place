@@ -196,7 +196,7 @@ BestInPlaceEditor.prototype = {
     // Display all error messages from server side validation
     $.each(jQuery.parseJSON(request.responseText), function(index, value) {
       var container = $("<span class='flash-error'></span>").html(value.toString());
-      container.purr({isSticky: true});
+      container.purr();
     });
 
     this.deactivate();

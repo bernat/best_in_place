@@ -1,7 +1,9 @@
-require "best_in_place/helper"
-
 module BestInPlace
-  autoload :TestHelpers, "best_in_place/test_helpers"
-end
+  require "best_in_place/helpers"
 
-ActionView::Base.send(:include, BestInPlace::BestInPlaceHelpers)
+  class Engine < ::Rails::Engine
+    initializer "setup for rails" do
+      ActionView::Base.send(:include, BestInPlace::Helpers)
+    end
+  end
+end

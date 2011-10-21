@@ -120,17 +120,12 @@ When the user tries to introduce invalid data, the error messages defined in the
 
 ##Installation
 
-It works by simply copying and loading the files from the folder **/public/javascripts** to your application and loading them in your layouts
-in the following order:
+First add it to your Gemfile:
+    gem "best_in_place"
 
-- jquery-1.4.4.js
-- jquery.purr.js
-- **best_in_place.js**
-
-The last one you can copy it (and keeping up to date to the last version) by running the following generator in your application's root.
-Remember to do it every time you update the gem (or you will see no change).
-
-    rails g best_in_place:setup
+It works by simply adding it to your application.js
+    //= require jquery
+    //= require best_in_place
 
 To be able to use the script the following block must be added as well:
 
@@ -138,10 +133,6 @@ To be able to use the script the following block must be added as well:
       /* Activating Best In Place */
       jQuery(".best_in_place").best_in_place()
     });
-
-In order to use the Rails 3 gem, just add the following line to the gemfile:
-
-    gem "best_in_place"
 
 ----
 

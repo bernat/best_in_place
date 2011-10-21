@@ -1,5 +1,5 @@
 module BestInPlace
-  module BestInPlaceHelpers
+  module Helpers
     def best_in_place(object, field, opts = {})
       opts[:type] ||= :input
       opts[:collection] ||= []
@@ -38,6 +38,13 @@ module BestInPlace
       out << "</span>"
       raw out
     end
+
+    def best_in_place_if(condition, object, field, opts={})
+      if condition
+        best_in_place(object, field, opts)
+      else
+        object.send field
+      end
+    end
   end
 end
-

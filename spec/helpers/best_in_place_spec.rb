@@ -191,4 +191,39 @@ describe BestInPlace::BestInPlaceHelpers do
       end
     end
   end
+  
+  describe "#best_in_place_if" do
+    context "when the parameters are valid" do
+      before(:each) do
+        @output = "Some Value"
+        @field = :somefield
+        @object = mock("object", @field => @output)
+        @options = mock("options")
+      end
+      context "when the condition is true" do
+        before {@condition = true}
+        context "when the options parameter is left off" do
+          it "should call best_in_place with the rest of the parameters and empty options" do
+            helper.should_receive(:best_in_place).with(@object, @field, {})
+            helper.best_in_place_if @condition, @object, @field
+          end
+        end
+        context "when the options parameter is included" do
+          it "should call best_in_place with the rest of the parameters" do
+            helper.should_receive(:best_in_place).with(@object, @field, @options)
+            helper.best_in_place_if @condition, @object, @field, @options
+          end
+        end
+      end
+      context "when the condition is false" do
+        before {@condition = false}
+        it "should return the value of the field when the options value is left off" do
+          helper.best_in_place_if(@condition, @object, @field).should eq @output
+        end
+        it "should return the value of the field when the options value is included" do
+          helper.best_in_place_if(@condition, @object, @field, @options).should eq @output
+        end
+      end
+    end
+  end
 end

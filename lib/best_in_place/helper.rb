@@ -39,6 +39,14 @@ module BestInPlace
       out << "</span>"
       raw out
     end
+
+    def best_in_place_if(condition, object, field, opts={})
+      if condition
+        best_in_place(object, field, opts)
+      else
+        object.send field
+      end
+    end
   end
 end
 

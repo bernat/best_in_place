@@ -47,6 +47,7 @@ Options:
   If not defined it will show *"-"*.
 - **:activator**: Is the DOM object that can activate the field. If not defined the user will making editable by clicking on it.
 - **:sanitize**: True by default. If set to false the input/textarea will accept html tags.
+- **:html_args**: Hash of html arguments, such as maxlength, default-value etc.
 
 
 I created a [test_app](https://github.com/bernat/best_in_place/tree/master/test_app) and a running demo in heroku to test the features.

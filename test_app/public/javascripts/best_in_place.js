@@ -90,6 +90,7 @@ BestInPlaceEditor.prototype = {
       self.attributeName = self.attributeName || jQuery(this).attr("data-attribute");
       self.nil           = self.nil           || jQuery(this).attr("data-nil");
       self.inner_class   = self.inner_class   || jQuery(this).attr("data-inner-class");
+      self.html_attrs    = self.html_attrs    || jQuery(this).attr("data-html-attrs");
     });
 
     // Try Rails-id based if parents did not explicitly supply something
@@ -109,6 +110,7 @@ BestInPlaceEditor.prototype = {
     self.activator     = self.element.attr("data-activator")    || self.element;
     self.nil           = self.element.attr("data-nil")          || self.nil      || "-";
     self.inner_class   = self.element.attr("data-inner-class")  || self.inner_class   || null;
+    self.html_attrs    = self.element.attr("data-html-attrs") || self.html_attrs;
 
     if (!self.element.attr("data-sanitize")) {
       self.sanitize = true;
@@ -195,6 +197,14 @@ BestInPlaceEditor.prototype = {
 
   clickHandler : function(event) {
     event.data.editor.activate();
+  },
+
+  setHtmlAttributes : function() {
+    var formField = this.element.find(this.formType);
+    var attrs = jQuery.parseJSON(this.html_attrs);
+    for(var key in attrs){
+      formField.attr(key, attrs[key]);
+    }
   }
 };
 
@@ -209,6 +219,7 @@ BestInPlaceEditor.forms = {
       }
       output += '></form>'
       this.element.html(output);
+      this.setHtmlAttributes();
       this.element.find('input')[0].select();
       this.element.find("form").bind('submit', {editor: this}, BestInPlaceEditor.forms.input.submitHandler);
       this.element.find("input").bind('blur',   {editor: this}, BestInPlaceEditor.forms.input.inputBlurHandler);
@@ -245,6 +256,7 @@ BestInPlaceEditor.forms = {
        });
       output += "</select></form>";
       this.element.html(output);
+      this.setHtmlAttributes();
       this.element.find("select").bind('change', {editor: this}, BestInPlaceEditor.forms.select.blurHandler);
       this.element.find("select").bind('blur', {editor: this}, BestInPlaceEditor.forms.select.blurHandler);
       this.element.find("select").bind('keyup', {editor: this}, BestInPlaceEditor.forms.select.keyupHandler);
@@ -269,6 +281,7 @@ BestInPlaceEditor.forms = {
       var newValue = Boolean(this.oldValue != this.values[1]);
       var output = newValue ? this.values[1] : this.values[0];
       this.element.html(output);
+      this.setHtmlAttributes();
       this.update();
     },
 
@@ -288,6 +301,7 @@ BestInPlaceEditor.forms = {
       output += this.sanitizeValue(this.oldValue);
       output += '</textarea></form>';
       this.element.html(output);
+      this.setHtmlAttributes();
 
       // set width and height of textarea
       jQuery(this.element.find("textarea")[0]).css({ 'min-width': width, 'min-height': height });

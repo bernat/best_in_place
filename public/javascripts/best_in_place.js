@@ -178,6 +178,8 @@ BestInPlaceEditor.prototype = {
 
   loadSuccessCallback : function(data) {
     this.element.html(data[this.objectName]);
+    this.element.trigger($.Event("ajax:success"), data);
+
     // Binding back after being clicked
     $(this.activator).bind('click', {editor: this}, this.clickHandler);
   },

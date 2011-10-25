@@ -339,7 +339,9 @@ BestInPlaceEditor.forms = {
 
 jQuery.fn.best_in_place = function() {
   this.each(function(){
-    jQuery(this).data('bestInPlaceEditor', new BestInPlaceEditor(this));
+    if (!jQuery(this).data('bestInPlaceEditor')) {
+      jQuery(this).data('bestInPlaceEditor', new BestInPlaceEditor(this));
+    }
   });
   return this;
 };

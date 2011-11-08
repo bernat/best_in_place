@@ -24,7 +24,7 @@ module BestInPlace
       out << " id='best_in_place_#{object.class.to_s.gsub("::", "_").underscore}_#{object.id}_#{field}'"
       out << " data-url='#{opts[:path].blank? ? url_for(object).to_s : url_for(opts[:path])}'"
       out << " data-object='#{object.class.to_s.gsub("::", "_").underscore}'"
-      out << " data-collection='#{collection}'" unless collection.blank?
+      out << " data-collection='#{escape_javascript(collection)}'" unless collection.blank?
       out << " data-attribute='#{field}'"
       out << " data-activator='#{opts[:activator]}'" unless opts[:activator].blank?
       out << " data-nil='#{opts[:nil].to_s}'" unless opts[:nil].blank?

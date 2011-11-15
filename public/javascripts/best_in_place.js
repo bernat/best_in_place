@@ -45,6 +45,7 @@ BestInPlaceEditor.prototype = {
 
   update : function() {
     var editor = this;
+    var returnedData = '';
     if (this.formType in {"input":1, "textarea":1} && this.getValue() == this.oldValue)
     { // Avoid request if no change is made
       this.abort();
@@ -54,8 +55,11 @@ BestInPlaceEditor.prototype = {
     editor.ajax({
       "type"       : "post",
       "dataType"   : "text",
+      "async"      : false,
+      "cache"      : false,
+      "timeout"    : 30000,
       "data"       : editor.requestData(),
-      "success"    : function(data){ editor.loadSuccessCallback(data); },
+      "success"    : function(data){ returnedData = editor.loadSuccessCallback(data); },
       "error"      : function(request, error){ editor.loadErrorCallback(request, error); }
     });
     if (this.formType == "select") {
@@ -69,13 +73,29 @@ BestInPlaceEditor.prototype = {
     } else if (this.formType == "checkbox") {
       editor.element.html(this.getValue() ? this.values[1] : this.values[0]);
     } else {
-      editor.element.html(this.getValue() != "" ? this.getValue() : this.nil);
+      editor.element.html(returnedData != "" ? returnedData : this.nil);
     }
   },
 
   activateForm : function() {
     alert("The form was not properly initialized. activateForm is unbound");
   },
+
+  rawValue : function() {
+    var result = this.oldValue;
+    if (this.load_url != "") {
+      $.ajax({
+        url     : this.load_url,
+        type    : 'GET',
+        async   : false,
+        cache   : false,
+        timeout : 30000,
+        success : function(data) {result = data;}
+      });
+    }
+    return result;
+  },
+
 
   // Helper Functions ////////////////////////////////////////////////////////
 
@@ -84,6 +104,7 @@ BestInPlaceEditor.prototype = {
     var self = this;
     self.element.parents().each(function(){
       self.url           = self.url           || jQuery(this).attr("data-url");
+      self.load_url      = self.load_url      || jQuery(this).attr("data-load-url");
       self.collection    = self.collection    || jQuery(this).attr("data-collection");
       self.formType      = self.formType      || jQuery(this).attr("data-type");
       self.objectName    = self.objectName    || jQuery(this).attr("data-object");
@@ -103,6 +124,7 @@ BestInPlaceEditor.prototype = {
 
     // Load own attributes (overrides all others)
     self.url           = self.element.attr("data-url")          || self.url      || document.location.pathname;
+    self.load_url      = self.element.attr("data-load-url")     || self.load_url || "";
     self.collection    = self.element.attr("data-collection")   || self.collection;
     self.formType      = self.element.attr("data-type")         || self.formtype || "input";
     self.objectName    = self.element.attr("data-object")       || self.objectName;
@@ -110,7 +132,7 @@ BestInPlaceEditor.prototype = {
     self.activator     = self.element.attr("data-activator")    || self.element;
     self.nil           = self.element.attr("data-nil")          || self.nil      || "-";
     self.inner_class   = self.element.attr("data-inner-class")  || self.inner_class   || null;
-    self.html_attrs    = self.element.attr("data-html-attrs") || self.html_attrs;
+    self.html_attrs    = self.element.attr("data-html-attrs")   || self.html_attrs;
 
     if (!self.element.attr("data-sanitize")) {
       self.sanitize = true;
@@ -182,6 +204,7 @@ BestInPlaceEditor.prototype = {
 
     // Binding back after being clicked
     $(this.activator).bind('click', {editor: this}, this.clickHandler);
+    return data;
   },
 
   loadErrorCallback : function(request, error) {
@@ -216,7 +239,7 @@ BestInPlaceEditor.forms = {
   "input" : {
     activateForm : function() {
       var output = '<form class="form_in_place" action="javascript:void(0)" style="display:inline;">';
-      output += '<input type="text" name="'+ this.attributeName + '" value="' + this.sanitizeValue(this.oldValue) + '"';
+      output += '<input type="text" name="'+ this.attributeName + '" value="' + this.sanitizeValue(this.rawValue()) + '"';
       if (this.inner_class != null) {
         output += ' class="' + this.inner_class + '"';
       }
@@ -301,7 +324,7 @@ BestInPlaceEditor.forms = {
 
       // construct the form
       var output = '<form action="javascript:void(0)" style="display:inline;"><textarea>';
-      output += this.sanitizeValue(this.oldValue);
+      output += this.sanitizeValue(this.rawValue());
       output += '</textarea></form>';
       this.element.html(output);
       this.setHtmlAttributes();

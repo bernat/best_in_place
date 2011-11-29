@@ -325,6 +325,32 @@ If the script is used with the Rails Gem no html tags will be allowed unless the
 
 ---
 
+## Development
+
+Fork the project on [github](https://github.com/bernat/best_in_place 'bernat / best_in_place on Github')
+
+    $ git clone <<your fork>
+    $ cd best_in_place
+    $ bundle
+
+### Prepare the test app
+
+    $ cd test_app
+    $ bundle
+    $ bundle exec rake db:test:prepare
+    $ cd ..
+
+### Run the specs
+
+    $ bundle exec rspec spec/
+
+### Bundler / gem troubleshooting
+
+- make sure you've run the bundle command for both the app and test_app!
+- run bundle update <<gem name> (in the right place) for any gems that are causing issues
+
+---
+
 ##Changelog
 
 ###Master branch (and part of the Rails 3.0 branch)

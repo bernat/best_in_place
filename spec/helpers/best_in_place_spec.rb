@@ -236,4 +236,27 @@ describe BestInPlace::BestInPlaceHelpers do
       end
     end
   end
+
+  describe '#class_name_for' do
+
+    class SomeThing < User
+      def self.model_name
+        'SomeGreatCustomThingy'
+      end
+    end
+
+    class BestInPlace::SomeOtherThing
+    end
+
+    it 'returns class.model_name if supported' do
+      helper.send(:class_name_for, User.new).should      == 'user'
+      helper.send(:class_name_for, SomeThing.new).should == 'somegreatcustomthingy'
+    end
+
+    it 'returns something else if class.model_name is not supported' do
+      thingy = BestInPlace::SomeOtherThing.new
+      helper.send(:class_name_for, thingy).should == 'best_in_place_some_other_thing'
+    end
+
+  end
 end

@@ -23,7 +23,7 @@ module BestInPlace
       out = "<span class='best_in_place'"
       out << " id='#{BestInPlace::Utils.build_best_in_place_id(object, field)}'"
       out << " data-url='#{opts[:path].blank? ? url_for(object).to_s : url_for(opts[:path])}'"
-      out << " data-object='#{ class_name_for object }'"
+      out << " data-object='#{ class_name_for(object) }'"
       out << " data-collection='#{collection}'" unless collection.blank?
       out << " data-attribute='#{field}'"
       out << " data-activator='#{opts[:activator]}'" unless opts[:activator].blank?

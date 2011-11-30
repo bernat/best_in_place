@@ -199,6 +199,18 @@ describe BestInPlace::BestInPlaceHelpers do
       it "should show the current country" do
         @span.text.should == "Italy"
       end
+
+      context "with an apostrophe in it" do
+        before do
+          @apostrophe_countries = [[1, "Joe's Country"], [2, "Bob's Country"]]
+          nk = Nokogiri::HTML.parse(helper.best_in_place @user, :country, :type => :select, :collection => @apostrophe_countries)
+          @span = nk.css("span")
+        end
+
+        it "should have a proper data collection" do
+          @span.attribute("data-collection").value.should == @apostrophe_countries.to_json
+        end
+      end
     end
   end
 

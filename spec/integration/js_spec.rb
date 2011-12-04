@@ -161,5 +161,51 @@ describe "JS behaviour", :js => true do
       page.should have_content("Another")
     end
   end
+
+  describe "display_as" do
+    it "should render the address with a custom format" do
+      @user.save!
+      visit user_path(@user)
+
+      within("#address") do
+        page.should have_content("addr => [Via Roma 99]")
+      end
+    end
+
+    it "should still show the custom format after an error" do
+      @user.save!
+      visit user_path(@user)
+
+      bip_text @user, :address, "inva"
+
+      within("#address") do
+        page.should have_content("addr => [Via Roma 99]")
+      end
+    end
+
+    it "should show the new result with the custom format after an update" do
+      @user.save!
+      visit user_path(@user)
+
+      bip_text @user, :address, "New address"
+
+      within("#address") do
+        page.should have_content("addr => [New address]")
+      end
+    end
+
+    it "should display the original content when editing the form" do
+      @user.save!
+      visit user_path(@user)
+
+      id = BestInPlace::Utils.build_best_in_place_id @user, :address
+      page.execute_script <<-JS
+        $("##{id}").click();
+      JS
+
+      text = page.find("##{id} input").value
+      text.should == "Via Roma 99"
+    end
+  end
 end
 

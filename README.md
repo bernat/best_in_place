@@ -27,8 +27,8 @@ The editor works by PUTting the updated value to the server and GETting the upda
 - ESC key destroys changes (requires user confirmation)
 - Autogrowing textarea
 - Helper for generating the best_in_place field only if a condition is satisfied
-
----
+- Provided test helpers to be used in your integration specs
+- Custom display methods
 
 ##Usage of Rails 3 Gem
 
@@ -52,6 +52,8 @@ Options:
 - **:sanitize**: True by default. If set to false the input/textarea will accept html tags.
 - **:html_attrs**: Hash of html arguments, such as maxlength, default-value etc.
 - **:inner_class**: Class that is set to the rendered form.
+- **:display_as**: A model method which will be called in order to display
+  this field.
 
 ###best_in_place_if
 **best_in_place_if condition, object, field, OPTIONS**
@@ -97,26 +99,22 @@ Examples (code in the views):
 
     <%= best_in_place @user, :country, :type => :select, :collection => [[1, "Spain"], [2, "Italy"], [3, "Germany"], [4, "France"]] %>
 
-Of course it can take an instance or global variable for the collection, just remember the structure [[key, value], [key, value],...].
+Of course it can take an instance or global variable for the collection, just remember the structure `[[key, value], [key, value],...]`.
 The key can be a string or an integer.
 
 ### Checkbox
 
     <%= best_in_place @user, :receive_emails, :type => :checkbox, :collection => ["No, thanks", "Yes, of course!"] %>
 
-The first value is always the negative boolean value and the second the positive. Structure: ["false value", "true value"].
+The first value is always the negative boolean value and the second the positive. Structure: `["false value", "true value"]`.
 If not defined, it will default to *Yes* and *No* options.
 
-### Display server validation errors
+## Controller response and respond_with_bip
 
-If you are using a Rails application, your controller's should respond to json in case of error.
-Example:
+Your controller should respond to json as it's the format used by best in
+place javascript. A simple example would be:
 
     class UserController < ApplicationController
-      respond_to :html, :json
-
-      ...
-
       def update
         @user = User.find(params[:id])
 
@@ -130,32 +128,49 @@ Example:
           end
         end
       end
-
-      ...
-
     end
 
-At the same time, you must define the restrictions, validations and error messages in the model, as the example below:
+If you respond with a json like `{:display_as => "New value to show"}` with
+status 200 (ok), then the updated field will show *New value to show* after
+being updated. This is needed in order to support the custom display methods,
+and it's automatically handled if you use the new method to encapsulate
+the responses:
 
-    class User < ActiveRecord::Base
-      validates :name,
-        :length => { :minimum => 2, :maximum => 24, :message => "has invalid length"},
-        :presence => {:message => "can't be blank"}
-      validates :last_name,
-        :length => { :minimum => 2, :maximum => 24, :message => "has invalid length"},
-        :presence => {:message => "can't be blank"}
-      validates :address,
-        :length => { :minimum => 5, :message => "too short length"},
-        :presence => {:message => "can't be blank"}
-      validates :email,
-        :presence => {:message => "can't be blank"},
-        :format => {:with => /^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/i, :message => "has wrong email format"}
-      validates :zip, :numericality => true, :length => { :minimum => 5 }
-    end
 
-When the user tries to introduce invalid data, the error messages defined in the model will be displayed in pop-up windows using the jQuery.purr plugin.
+        respond_to do |format|
+          if @user.update_attributes(params[:user])
+            format.html { redirect_to(@user, :notice => 'User was successfully updated.') }
+            format.json { respond_with_bip(@user) }
+          else
+            format.html { render :action => "edit" }
+            format.json { respond_with_bip(@user) }
+          end
+        end
 
----
+This will be exactly the same as the previous example, but with support to
+handle custom display methods.
+
+##Using custom display methods
+
+As of best in place 1.0.3 you can use custom methods in your model in order to
+decide how a certain field has to be displayed. You can write something like:
+
+    = best_in_place @user, :description, :type => :textarea, :display_as => :mk_description
+
+Then instead of using `@user.description` to show the actual value, best in
+place will call `@user.mk_description`. This can be used for any kind of
+custom formatting, text with markdown, currency values, etc...
+
+Because best in place has no way to call that method in your model from
+javascript after a successful update, the only way to display the new correct
+value after an edition is to use the provided methods to respond in your
+controllers, or implement the same in your own way.
+
+If you respond a successful update with a json having a `display_as` key, that
+value will be used to update the value in the view. The provided
+`respond_with_bip` handles this for you, but if you want you can always
+customize this behaviour.
+
 
 ##Non Active Record environments
 We are not planning to support other ORMs apart from Active Record, at least for now. So, you can perfectly consider the following workaround as *the right way* until a specific implementation is done for your ORM.

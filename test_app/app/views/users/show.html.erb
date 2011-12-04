@@ -25,7 +25,7 @@
     <tr>
       <td>Address</td>
       <td id="address">
-        <%= best_in_place @user, :address %>
+        <%= best_in_place @user, :address, :display_as => :address_format %>
       </td>
     </tr>
     <tr>
@@ -49,7 +49,7 @@
     <tr>
       <td>User description</td>
       <td id="description">
-        <%= best_in_place @user, :description, :type => :textarea, :sanitize => false %>
+        <%= best_in_place @user, :description, :display_as => :markdown_desc, :type => :textarea, :sanitize => false %>
       </td>
   </table>
   <br />

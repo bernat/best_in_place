@@ -12,4 +12,12 @@ class User < ActiveRecord::Base
     :presence => {:message => "can't be blank"},
     :format => {:with => /^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/i, :message => "has wrong email format"}
   validates :zip, :numericality => true, :length => { :minimum => 5 }
+
+  def address_format
+    "<b>addr => [#{address}]</b>".html_safe
+  end
+
+  def markdown_desc
+    RDiscount.new(description).to_html.html_safe
+  end
 end

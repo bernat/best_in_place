@@ -123,6 +123,16 @@ describe BestInPlace::BestInPlaceHelpers do
         span = nk.css("span")
         span.attribute("data-activator").value.should == "awesome"
       end
+
+      describe "display_as" do
+        it "should render the address with a custom renderer" do
+          @user.should_receive(:address_format).and_return("the result")
+          out = helper.best_in_place @user, :address, :display_as => :address_format
+          nk = Nokogiri::HTML.parse(out)
+          span = nk.css("span")
+          span.text.should == "the result"
+        end
+      end
     end
 
 
@@ -220,7 +230,7 @@ describe BestInPlace::BestInPlaceHelpers do
         @output = "Some Value"
         @field = :somefield
         @object = mock("object", @field => @output)
-        @options = mock("options")
+        @options = {}
       end
       context "when the condition is true" do
         before {@condition = true}

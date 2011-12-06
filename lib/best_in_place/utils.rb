@@ -7,7 +7,7 @@ module BestInPlace
       end
 
       id = "best_in_place_#{object.class.to_s.demodulize.underscore}"
-      id << "_#{object.id}" if object.class.ancestors.include?(ActiveRecord::Base)
+      id << "_#{object.id}" if object.class.ancestors.include?(ActiveModel::Serializers::JSON)
       id << "_#{field}"
       id
     end

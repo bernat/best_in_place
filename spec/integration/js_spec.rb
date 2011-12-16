@@ -162,6 +162,20 @@ describe "JS behaviour", :js => true do
     end
   end
 
+  it "should fire off a callback when updating a field" do
+    @user.save!
+    visit user_path(@user)
+
+    id = BestInPlace::Utils.build_best_in_place_id @user, :last_name
+    page.execute_script <<-JS
+      $("##{id}").bind('best_in_place:update', function() { $('body').append('Last name was updated!') });
+    JS
+
+    page.should have_no_content('Last name was updated!')
+    bip_text @user, :last_name, 'Another'
+    page.should have_content('Last name was updated!')
+  end
+
   describe "display_as" do
     it "should render the address with a custom format" do
       @user.save!

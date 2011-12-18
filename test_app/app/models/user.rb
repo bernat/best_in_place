@@ -1,4 +1,7 @@
 class User < ActiveRecord::Base
+
+  has_attached_file :avatar, :styles => { :medium => "300x300>", :thumb => "100x100>" }
+
   validates :name,
     :length => { :minimum => 2, :maximum => 24, :message => "has invalid length"},
     :presence => {:message => "can't be blank"}
@@ -19,5 +22,9 @@ class User < ActiveRecord::Base
 
   def markdown_desc
     RDiscount.new(description).to_html.html_safe
+  end
+  
+  def avatar_thumb
+    avatar.url(:thumb)
   end
 end

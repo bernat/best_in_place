@@ -49,7 +49,21 @@
     <tr>
       <td>User description</td>
       <td id="description">
-        <%= best_in_place @user, :description, :display_as => :markdown_desc, :type => :textarea, :sanitize => false %>
+        <%= best_in_place @user,
+                          :description,
+                          :type => :textarea,
+                          :sanitize => false %>
+      </td>
+       </tr>
+    <tr>
+      <td>avatar</td>
+      <td id="avatar">
+
+        <%=  best_in_place @user,
+                            :avatar,
+                            :type => :img,
+                            :display_as => :avatar_thumb
+                            %>
       </td>
   </table>
   <br />

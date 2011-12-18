@@ -47,10 +47,23 @@
       </td>
     </tr>
     <tr>
+      <td>Favorite color</td>
+      <td id="favorite_color">
+        <%= best_in_place @user, :favorite_color, :ok_button => 'Do it!', :cancel_button => 'Nope' %>
+      </td>
+    </tr>
+    <tr>
+      <td>Favorite books</td>
+      <td id="favorite_books">
+        <%= best_in_place @user, :favorite_books, :type => :textarea, :ok_button => 'Save', :cancel_button => 'Cancel' %>
+      </td>
+    </tr>
+    <tr>
       <td>User description</td>
       <td id="description">
         <%= best_in_place @user, :description, :display_as => :markdown_desc, :type => :textarea, :sanitize => false %>
       </td>
+    </tr>
   </table>
   <br />
   <hr />

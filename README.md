@@ -24,6 +24,7 @@ The editor works by PUTting the updated value to the server and GETting the upda
 - Sanitize HTML and trim spaces of user's input on user's choice
 - Displays server-side **validation** errors
 - Allows external activator
+- Allows optional, configurable OK and Cancel buttons for inputs and textareas
 - ESC key destroys changes (requires user confirmation)
 - Autogrowing textarea
 - Helper for generating the best_in_place field only if a condition is satisfied
@@ -49,6 +50,8 @@ Options:
 - **:nil**: The nil param defines the content displayed in case no value is defined for that field. It can be something like "click me to edit".
   If not defined it will show *"-"*.
 - **:activator**: Is the DOM object that can activate the field. If not defined the user will making editable by clicking on it.
+- **:ok_button**: (Inputs and textareas only) If set to a string, then an OK button will be shown with the string as its label, replacing save on blur.
+- **:cancel_button**: (Inputs and textareas only) If set to a string, then a Cancel button will be shown with the string as its label.
 - **:sanitize**: True by default. If set to false the input/textarea will accept html tags.
 - **:html_attrs**: Hash of html arguments, such as maxlength, default-value etc.
 - **:inner_class**: Class that is set to the rendered form.
@@ -94,6 +97,8 @@ Examples (code in the views):
 ### Textarea
 
     <%= best_in_place @user, :description, :type => :textarea %>
+
+    <%= best_in_place @user, :favorite_books, :type => :textarea, :ok_button => 'Save', :cancel_button => 'Cancel' %>
 
 ### Select
 

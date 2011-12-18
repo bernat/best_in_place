@@ -10,6 +10,8 @@ describe "JS behaviour", :js => true do
       :zip => "25123",
       :country => "2",
       :receive_email => false,
+      :favorite_color => 'Red',
+      :favorite_books => "The City of Gold and Lead",
       :description => "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus a lectus et lacus ultrices auctor. Morbi aliquet convallis tincidunt. Praesent enim libero, iaculis at commodo nec, fermentum a dolor. Quisque eget eros id felis lacinia faucibus feugiat et ante. Aenean justo nisi, aliquam vel egestas vel, porta in ligula. Etiam molestie, lacus eget tincidunt accumsan, elit justo rhoncus urna, nec pretium neque mi et lorem. Aliquam posuere, dolor quis pulvinar luctus, felis dolor tincidunt leo, eget pretium orci purus ac nibh. Ut enim sem, suscipit ac elementum vitae, sodales vel sem."
   end
 
@@ -90,7 +92,7 @@ describe "JS behaviour", :js => true do
     end
   end
 
-  it "should be able to use bil_select to change a select field" do
+  it "should be able to use bip_select to change a select field" do
     @user.save!
     visit user_path(@user)
     within("#country") do
@@ -121,6 +123,90 @@ describe "JS behaviour", :js => true do
     end
   end
 
+  it "should correctly use an OK submit button when so configured for a text field" do
+    @user.save!
+    visit user_path(@user)
+
+    within("#favorite_color") do
+      page.should have_content('Red')
+    end
+    
+    id = BestInPlace::Utils.build_best_in_place_id @user, :favorite_color
+    page.execute_script <<-JS
+      $("##{id}").click();
+      $("##{id} input[name='favorite_color']").val('Blue');
+      $("##{id} input[type='submit']").click();
+    JS
+    
+    visit user_path(@user)
+    within("#favorite_color") do
+      page.should have_content('Blue')
+    end
+  end
+  
+  it "should correctly use a Cancel button when so configured for a text field" do
+    @user.save!
+    visit user_path(@user)
+
+    within("#favorite_color") do
+      page.should have_content('Red')
+    end
+    
+    id = BestInPlace::Utils.build_best_in_place_id @user, :favorite_color
+    page.execute_script <<-JS
+      $("##{id}").click();
+      $("##{id} input[name='favorite_color']").val('Blue');
+      $("##{id} input[type='button']").click();
+    JS
+
+    visit user_path(@user)
+    within("#favorite_color") do
+      page.should have_content('Red')
+    end
+  end
+  
+  it "should correctly use an OK submit button when so configured for a text area" do
+    @user.save!
+    visit user_path(@user)
+
+    within("#favorite_books") do
+      page.should have_content('The City of Gold and Lead')
+    end
+    
+    id = BestInPlace::Utils.build_best_in_place_id @user, :favorite_books
+    page.execute_script <<-JS
+      $("##{id}").click();
+      $("##{id} textarea").val('1Q84');
+      $("##{id} input[type='submit']").click();
+    JS
+
+    visit user_path(@user)
+    within("#favorite_books") do
+      page.should have_content('1Q84')
+    end
+  end
+  
+  it "should correctly use a Cancel button when so configured for a text area" do
+    @user.save!
+    visit user_path(@user)
+
+    within("#favorite_books") do
+      page.should have_content('The City of Gold and Lead')
+    end
+    
+    id = BestInPlace::Utils.build_best_in_place_id @user, :favorite_books
+    page.execute_script <<-JS
+      $("##{id}").click();
+      $("##{id} textarea").val('1Q84');
+      $("##{id} input[type='button']").click();
+    JS
+    
+    visit user_path(@user)
+    within("#favorite_books") do
+      page.should have_content('The City of Gold and Lead')
+    end
+  end
+  
   it "should show validation errors" do
     @user.save!
     visit user_path(@user)

@@ -23,6 +23,12 @@
       </td>
     </tr>
     <tr>
+      <td>Birth date</td>
+      <td id="birth_date">
+        <%= best_in_place @user, :birth_date, :type => :date %>
+      </td>
+    </tr>
+    <tr>
       <td>Address</td>
       <td id="address">
         <%= best_in_place @user, :address, :display_as => :address_format %>

@@ -11,6 +11,7 @@ describe BestInPlace::BestInPlaceHelpers do
         :zip => "25123",
         :country => "2",
         :receive_email => false,
+        :birth_date => Date.today,
         :description => "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus a lectus et lacus ultrices auctor. Morbi aliquet convallis tincidunt. Praesent enim libero, iaculis at commodo nec, fermentum a dolor. Quisque eget eros id felis lacinia faucibus feugiat et ante. Aenean justo nisi, aliquam vel egestas vel, porta in ligula. Etiam molestie, lacus eget tincidunt accumsan, elit justo rhoncus urna, nec pretium neque mi et lorem. Aliquam posuere, dolor quis pulvinar luctus, felis dolor tincidunt leo, eget pretium orci purus ac nibh. Ut enim sem, suscipit ac elementum vitae, sodales vel sem."
     end
 
@@ -148,6 +149,25 @@ describe BestInPlace::BestInPlaceHelpers do
 
       it "should have an input data-type" do
         @span.attribute("data-type").value.should == "input"
+      end
+
+      it "should have no data-collection" do
+        @span.attribute("data-collection").should be_nil
+      end
+    end
+
+    context "with a date attribute" do
+      before do
+        nk = Nokogiri::HTML.parse(helper.best_in_place @user, :birth_date, :type => :date)
+        @span = nk.css("span")
+      end
+
+      it "should render the date as text" do
+        @span.text.should == Date.today.to_s
+      end
+
+      it "should have a date data-type" do
+        @span.attribute("data-type").value.should == "date"
       end
 
       it "should have no data-collection" do

@@ -10,6 +10,7 @@ describe "JS behaviour", :js => true do
       :zip => "25123",
       :country => "2",
       :receive_email => false,
+      :birth_date => Date.today,
       :description => "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus a lectus et lacus ultrices auctor. Morbi aliquet convallis tincidunt. Praesent enim libero, iaculis at commodo nec, fermentum a dolor. Quisque eget eros id felis lacinia faucibus feugiat et ante. Aenean justo nisi, aliquam vel egestas vel, porta in ligula. Etiam molestie, lacus eget tincidunt accumsan, elit justo rhoncus urna, nec pretium neque mi et lorem. Aliquam posuere, dolor quis pulvinar luctus, felis dolor tincidunt leo, eget pretium orci purus ac nibh. Ut enim sem, suscipit ac elementum vitae, sodales vel sem."
   end
 
@@ -102,6 +103,40 @@ describe "JS behaviour", :js => true do
     visit user_path(@user)
     within("#country") do
       page.should have_content("France")
+    end
+  end
+
+  it "should be able to use bip_text to change a date field" do
+    @user.save!
+    visit user_path(@user)
+    within("#birth_date") do
+      page.should have_content(Date.today)
+    end
+
+    bip_text @user, :birth_date, (Date.today - 1.days)
+
+    visit user_path(@user)
+    within("#birth_date") do
+      page.should have_content(Date.today - 1.days)
+    end
+  end
+
+  it "should be able to use datepicker to change a date field" do
+    @user.save!
+    visit user_path(@user)
+    within("#birth_date") do
+      page.should have_content(Date.today)
+    end
+
+    id = BestInPlace::Utils.build_best_in_place_id @user, :birth_date
+    page.execute_script <<-JS
+      $("##{id}").click();
+      $(".ui-datepicker-calendar tbody td").not(".ui-datepicker-other-month").first().click()
+    JS
+
+    visit user_path(@user)
+    within("#birth_date") do
+      page.should have_content(Date.new(Date.today.year, Date.today.month, 1))
     end
   end
 

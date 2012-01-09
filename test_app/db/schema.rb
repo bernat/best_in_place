@@ -12,12 +12,11 @@
 # It's strongly recommended to check this file into your version control system.
 
 ActiveRecord::Schema.define(:version => 20111224181356) do
-
   create_table "users", :force => true do |t|
     t.string   "name"
     t.string   "last_name"
     t.string   "address"
-    t.string   "email",         :null => false
+    t.string   "email",          :null => false
     t.string   "zip"
     t.string   "country"
     t.datetime "created_at"
@@ -26,6 +25,7 @@ ActiveRecord::Schema.define(:version => 20111224181356) do
     t.text     "description"
     t.datetime "birth_date"
     t.float    "money"
+    t.string   "favorite_color"
+    t.text     "favorite_books"
   end
-
 end

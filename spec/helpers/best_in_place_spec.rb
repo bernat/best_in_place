@@ -62,6 +62,14 @@ describe BestInPlace::BestInPlaceHelpers do
         @span.attribute("data-activator").should be_nil
       end
 
+      it "should have no OK button text by default" do
+        @span.attribute("data-ok-button").should be_nil
+      end
+
+      it "should have no Cancel button text by default" do
+        @span.attribute("data-cancel-button").should be_nil
+      end
+
       it "should have no inner_class by default" do
         @span.attribute("data-inner-class").should be_nil
       end
@@ -128,6 +136,20 @@ describe BestInPlace::BestInPlaceHelpers do
         nk = Nokogiri::HTML.parse(out)
         span = nk.css("span")
         span.attribute("data-activator").value.should == "awesome"
+      end
+
+      it "should have the given OK button text" do
+        out = helper.best_in_place @user, :name, :ok_button => "okay"
+        nk = Nokogiri::HTML.parse(out)
+        span = nk.css("span")
+        span.attribute("data-ok-button").value.should == "okay"
+      end
+
+      it "should have the given Cancel button text" do
+        out = helper.best_in_place @user, :name, :cancel_button => "nasty"
+        nk = Nokogiri::HTML.parse(out)
+        span = nk.css("span")
+        span.attribute("data-cancel-button").value.should == "nasty"
       end
 
       describe "display_as" do

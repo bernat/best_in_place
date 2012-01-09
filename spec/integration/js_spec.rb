@@ -12,7 +12,10 @@ describe "JS behaviour", :js => true do
       :receive_email => false,
       :birth_date => Time.now.utc,
       :description => "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus a lectus et lacus ultrices auctor. Morbi aliquet convallis tincidunt. Praesent enim libero, iaculis at commodo nec, fermentum a dolor. Quisque eget eros id felis lacinia faucibus feugiat et ante. Aenean justo nisi, aliquam vel egestas vel, porta in ligula. Etiam molestie, lacus eget tincidunt accumsan, elit justo rhoncus urna, nec pretium neque mi et lorem. Aliquam posuere, dolor quis pulvinar luctus, felis dolor tincidunt leo, eget pretium orci purus ac nibh. Ut enim sem, suscipit ac elementum vitae, sodales vel sem.",
-      :money => 100
+      :money => 100,
+      :favorite_color => 'Red',
+      :favorite_books => "The City of Gold and Lead",
+      :description => "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus a lectus et lacus ultrices auctor. Morbi aliquet convallis tincidunt. Praesent enim libero, iaculis at commodo nec, fermentum a dolor. Quisque eget eros id felis lacinia faucibus feugiat et ante. Aenean justo nisi, aliquam vel egestas vel, porta in ligula. Etiam molestie, lacus eget tincidunt accumsan, elit justo rhoncus urna, nec pretium neque mi et lorem. Aliquam posuere, dolor quis pulvinar luctus, felis dolor tincidunt leo, eget pretium orci purus ac nibh. Ut enim sem, suscipit ac elementum vitae, sodales vel sem."
   end
 
   describe "nil option" do
@@ -175,6 +178,182 @@ describe "JS behaviour", :js => true do
     visit user_path(@user)
     within("#receive_email") do
       page.should have_content("Yes of course")
+    end
+  end
+
+  it "should correctly use an OK submit button when so configured for an input" do
+    @user.save!
+    visit user_path(@user)
+
+    within("#favorite_color") do
+      page.should have_content('Red')
+    end
+
+    id = BestInPlace::Utils.build_best_in_place_id @user, :favorite_color
+    page.execute_script <<-JS
+      $("##{id}").click();
+      $("##{id} input[name='favorite_color']").val('Blue');
+      $("##{id} input[type='submit']").click();
+    JS
+
+    visit user_path(@user)
+    within("#favorite_color") do
+      page.should have_content('Blue')
+    end
+  end
+
+  it "should correctly use a Cancel button when so configured for an input" do
+    @user.save!
+    visit user_path(@user)
+
+    within("#favorite_color") do
+      page.should have_content('Red')
+    end
+
+    id = BestInPlace::Utils.build_best_in_place_id @user, :favorite_color
+    page.execute_script <<-JS
+      $("##{id}").click();
+      $("##{id} input[name='favorite_color']").val('Blue');
+      $("##{id} input[type='button']").click();
+    JS
+
+    visit user_path(@user)
+    within("#favorite_color") do
+      page.should have_content('Red')
+    end
+  end
+
+  it "should not submit input on blur if there's an OK button present" do
+    @user.save!
+    visit user_path(@user)
+
+    within("#favorite_color") do
+      page.should have_content('Red')
+    end
+
+    id = BestInPlace::Utils.build_best_in_place_id @user, :favorite_color
+    page.execute_script <<-JS
+      $("##{id}").click();
+      $("##{id} input[name='favorite_color']").val('Blue');
+      $("##{id} input[name='favorite_color']").blur();
+    JS
+    sleep 1 # Increase if browser is slow
+
+    visit user_path(@user)
+    within("#favorite_color") do
+      page.should have_content('Red')
+    end
+  end
+
+  it "should still submit input on blur if there's only a Cancel button present" do
+    @user.save!
+    visit user_path(@user, :suppress_ok_button => 1)
+
+    within("#favorite_color") do
+      page.should have_content('Red')
+    end
+
+    id = BestInPlace::Utils.build_best_in_place_id @user, :favorite_color
+    page.execute_script %{$("##{id}").click();}
+    page.should have_no_css("##{id} input[type='submit']")
+    page.execute_script <<-JS
+      $("##{id} input[name='favorite_color']").val('Blue');
+      $("##{id} input[name='favorite_color']").blur();
+    JS
+    sleep 1 # Increase if browser is slow
+
+    visit user_path(@user)
+    within("#favorite_color") do
+      page.should have_content('Blue')
+    end
+  end
+
+  it "should correctly use an OK submit button when so configured for a text area" do
+    @user.save!
+    visit user_path(@user)
+
+    within("#favorite_books") do
+      page.should have_content('The City of Gold and Lead')
+    end
+
+    id = BestInPlace::Utils.build_best_in_place_id @user, :favorite_books
+    page.execute_script <<-JS
+      $("##{id}").click();
+      $("##{id} textarea").val('1Q84');
+      $("##{id} input[type='submit']").click();
+    JS
+
+    visit user_path(@user)
+    within("#favorite_books") do
+      page.should have_content('1Q84')
+    end
+  end
+
+  it "should correctly use a Cancel button when so configured for a text area" do
+    @user.save!
+    visit user_path(@user)
+
+    within("#favorite_books") do
+      page.should have_content('The City of Gold and Lead')
+    end
+
+    id = BestInPlace::Utils.build_best_in_place_id @user, :favorite_books
+    page.execute_script <<-JS
+      $("##{id}").click();
+      $("##{id} textarea").val('1Q84');
+      $("##{id} input[type='button']").click();
+    JS
+    page.driver.browser.switch_to.alert.accept
+
+    visit user_path(@user)
+    within("#favorite_books") do
+      page.should have_content('The City of Gold and Lead')
+    end
+  end
+
+  it "should not submit text area on blur if there's an OK button present" do
+    @user.save!
+    visit user_path(@user)
+
+    within("#favorite_books") do
+      page.should have_content('The City of Gold and Lead')
+    end
+
+    id = BestInPlace::Utils.build_best_in_place_id @user, :favorite_books
+    page.execute_script <<-JS
+      $("##{id}").click();
+      $("##{id} textarea").val('1Q84');
+      $("##{id} textarea").blur();
+    JS
+    sleep 1 # Increase if browser is slow
+    page.driver.browser.switch_to.alert.accept
+
+    visit user_path(@user)
+    within("#favorite_books") do
+      page.should have_content('The City of Gold and Lead')
+    end
+  end
+
+  it "should still submit text area on blur if there's only a Cancel button present" do
+    @user.save!
+    visit user_path(@user, :suppress_ok_button => 1)
+
+    within("#favorite_books") do
+      page.should have_content('The City of Gold and Lead')
+    end
+
+    id = BestInPlace::Utils.build_best_in_place_id @user, :favorite_books
+    page.execute_script %{$("##{id}").click();}
+    page.should have_no_css("##{id} input[type='submit']")
+    page.execute_script <<-JS
+      $("##{id} textarea").val('1Q84');
+      $("##{id} textarea").blur();
+    JS
+    sleep 1 # Increase if browser is slow
+
+    visit user_path(@user)
+    within("#favorite_books") do
+      page.should have_content('1Q84')
     end
   end
 
@@ -395,4 +574,3 @@ describe "JS behaviour", :js => true do
     end
   end
 end
-

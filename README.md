@@ -59,6 +59,7 @@ Options:
 - **:inner_class**: Class that is set to the rendered form.
 - **:display_as**: A model method which will be called in order to display
   this field.
+- **:object_name**: Used for overriding the default params key used for the object (the data-object attribute). Useful for e.g. STI scenarios where best_in_place should post to a common controller for different models.
 
 ###best_in_place_if
 **best_in_place_if condition, object, field, OPTIONS**

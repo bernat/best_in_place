@@ -152,6 +152,15 @@ describe BestInPlace::BestInPlaceHelpers do
         span.attribute("data-cancel-button").value.should == "nasty"
       end
 
+      describe "object_name" do
+        it "should change the data-object value" do
+          out = helper.best_in_place @user, :name, :object_name => "my_user"
+          nk = Nokogiri::HTML.parse(out)
+          span = nk.css("span")
+          span.attribute("data-object").value.should == "my_user"
+        end
+      end
+
       describe "display_as" do
         it "should render the address with a custom renderer" do
           @user.should_receive(:address_format).and_return("the result")
@@ -182,7 +191,6 @@ describe BestInPlace::BestInPlaceHelpers do
         end
       end
     end
-
 
     context "with a text field attribute" do
       before do

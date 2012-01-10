@@ -75,6 +75,12 @@
       </td>
     </tr>
     <tr>
+      <td>Simple-formatted user description</td>
+      <td id="dw_description">
+        <%= best_in_place @user, :description, :display_with => :simple_format, :type => :textarea %>
+      </td>
+    </tr>
+    <tr>
       <td>Money</td>
       <td id="money">
         <%= best_in_place @user, :money, :display_with => :number_to_currency %>

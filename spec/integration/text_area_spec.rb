@@ -27,4 +27,13 @@ describe "JS behaviour", :js => true do
       page.should have_content("A new description")
     end
   end
+
+  it "should be able to use a bip_text with :display_with option" do
+    @user.description = "I'm so awesome"
+    @user.save!
+    visit user_path(@user)
+    within("#dw_description") do
+      page.should have_content("I'm so awesome")
+    end
+  end
 end

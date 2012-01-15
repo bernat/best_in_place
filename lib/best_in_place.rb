@@ -1,3 +1,4 @@
+require "best_in_place/check_version"
 require "best_in_place/utils"
 require "best_in_place/helper"
 require "best_in_place/engine"

@@ -20,6 +20,7 @@ module BestInPlace
       if opts[:type] == :select && !opts[:collection].blank?
         v = object.send(field)
         value = Hash[opts[:collection]][!!(v =~ /^[0-9]+$/) ? v.to_i : v]
+        value = Hash[opts[:collection]][v.id] if value.nil?
         collection = opts[:collection].to_json
       end
       if opts[:type] == :checkbox

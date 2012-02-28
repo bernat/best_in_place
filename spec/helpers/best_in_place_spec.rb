@@ -179,6 +179,13 @@ describe BestInPlace::BestInPlaceHelpers do
           span.text.should == "$150.00"
         end
 
+        it "accepts a proc" do
+          out = helper.best_in_place @user, :name, :display_with => Proc.new { |v| v.upcase }
+          nk = Nokogiri::HTML.parse(out)
+          span = nk.css("span")
+          span.text.should == "LUCIA"
+        end
+
         it "should raise an error if the given helper can't be found" do
           lambda { helper.best_in_place @user, :money, :display_with => :fk_number_to_currency }.should raise_error(ArgumentError)
         end

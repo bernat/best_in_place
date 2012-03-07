@@ -176,6 +176,9 @@ additional `helper_options` hash:
 
     = best_in_place @user, :money, :display_with => :number_to_currency, :helper_options => {:unit => "€"}
 
+You can also pass in a proc or lambda like this:
+
+    = best_in_place @post, :body, :display_with => lambda { |v| textilize(v).html_safe }
 
 ##Non Active Record environments
 We are not planning to support other ORMs apart from Active Record, at least for now. So, you can perfectly consider the following workaround as *the right way* until a specific implementation is done for your ORM.

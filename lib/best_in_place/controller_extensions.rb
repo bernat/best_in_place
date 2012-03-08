@@ -7,8 +7,7 @@ module BestInPlace
   private
     def respond_bip_ok(obj)
       klass = obj.class.to_s
-      updating_attr = params[klass.underscore].keys.first
-
+      updating_attr = params[klass.underscore.gsub(/\//, '_')].keys.first
       if renderer = BestInPlace::DisplayMethods.lookup(klass, updating_attr)
         render :json => renderer.render_json(obj)
       else

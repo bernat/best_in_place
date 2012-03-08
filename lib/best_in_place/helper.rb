@@ -15,11 +15,11 @@ module BestInPlace
       field = field.to_s
 
       value = build_value_for(object, field, opts)
-
+			selectvalue = nil
       collection = nil
       if opts[:type] == :select && !opts[:collection].blank?
         v = object.send(field)
-        # value = Hash[opts[:collection]][!!(v =~ /^[0-9]+$/) ? v.to_i : v]
+        selectvalue = Hash[opts[:collection]][!!(v =~ /^[0-9]+$/) ? v.to_i : v]
         collection = opts[:collection].to_json
 				value = build_value_for(object, field, opts)
       end
@@ -37,6 +37,7 @@ module BestInPlace
       out << " data-object='#{opts[:object_name] || object.class.to_s.gsub("::", "_").underscore}'"
       out << " data-collection='#{collection.gsub(/'/, "&#39;")}'" unless collection.blank?
       out << " data-attribute='#{field}'"
+			out << " data-value='#{selectvalue}'" unless selectvalue.nil?
       out << " data-activator='#{opts[:activator]}'" unless opts[:activator].blank?
       out << " data-ok-button='#{opts[:ok_button]}'" unless opts[:ok_button].blank?
       out << " data-cancel-button='#{opts[:cancel_button]}'" unless opts[:cancel_button].blank?

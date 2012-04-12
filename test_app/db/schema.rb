@@ -12,6 +12,7 @@
 # It's strongly recommended to check this file into your version control system.
 
 ActiveRecord::Schema.define(:version => 20111224181356) do
+
   create_table "users", :force => true do |t|
     t.string   "name"
     t.string   "last_name"
@@ -19,13 +20,14 @@ ActiveRecord::Schema.define(:version => 20111224181356) do
     t.string   "email",          :null => false
     t.string   "zip"
     t.string   "country"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
     t.boolean  "receive_email"
     t.text     "description"
-    t.datetime "birth_date"
-    t.float    "money"
     t.string   "favorite_color"
     t.text     "favorite_books"
+    t.datetime "birth_date"
+    t.float    "money"
   end
+
 end

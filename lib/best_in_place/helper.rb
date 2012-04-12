@@ -44,6 +44,14 @@ module BestInPlace
       out << " data-inner-class='#{opts[:inner_class]}'" if opts[:inner_class]
       out << " data-html-attrs='#{opts[:html_attrs].to_json}'" unless opts[:html_attrs].blank?
       out << " data-original-content='#{attribute_escape(object.send(field))}'" if opts[:display_as] || opts[:display_with]
+      if opts[:data] && opts[:data].is_a?(Hash)
+        opts[:data].each do |k, v|
+          if !v.is_a?(String) && !v.is_a?(Symbol)
+            v = v.to_json
+          end
+          out << %( data-#{k.to_s.dasherize}="#{v}")
+        end
+      end
       if !opts[:sanitize].nil? && !opts[:sanitize]
         out << " data-sanitize='false'>"
         out << sanitize(value, :tags => %w(b i u s a strong em p h1 h2 h3 h4 h5 ul li ol hr pre span img br), :attributes => %w(id class href))

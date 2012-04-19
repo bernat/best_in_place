@@ -31,8 +31,20 @@ BestInPlaceEditor.prototype = {
   // Public Interface Functions //////////////////////////////////////////////
 
   activate : function() {
+    var to_display = "";
+    if (this.isNil) {
+      to_display = "";
+    }
+    else if (this.original_content) {
+      to_display = this.original_content;
+    }
+    else {
+      to_display = this.element.html();
+    }
+
     var elem = this.isNil ? "" : this.element.html();
     this.oldValue = elem;
+    this.display_value = to_display;
     $(this.activator).unbind("click", this.clickHandler);
     this.activateForm();
   },
@@ -41,6 +53,13 @@ BestInPlaceEditor.prototype = {
     if (this.isNil) this.element.html(this.nil);
     else            this.element.html(this.oldValue);
     $(this.activator).bind('click', {editor: this}, this.clickHandler);
+    this.element.trigger($.Event("best_in_place:abort"));
+  },
+
+  abortIfConfirm : function () {
+    if (confirm("Are you sure you want to discard your changes?")) {
+      this.abort();
+    }
   },
 
   update : function() {
@@ -71,6 +90,8 @@ BestInPlaceEditor.prototype = {
     } else {
       editor.element.html(this.getValue() != "" ? this.getValue() : this.nil);
     }
+    $(this.activator).bind('click', {editor: this}, this.clickHandler);
+    editor.element.trigger($.Event("best_in_place:update"));
   },
 
   activateForm : function() {
@@ -88,9 +109,13 @@ BestInPlaceEditor.prototype = {
       self.formType      = self.formType      || jQuery(this).attr("data-type");
       self.objectName    = self.objectName    || jQuery(this).attr("data-object");
       self.attributeName = self.attributeName || jQuery(this).attr("data-attribute");
+      self.activator     = self.activator     || jQuery(this).attr("data-activator");
+      self.okButton      = self.okButton      || jQuery(this).attr("data-ok-button");
+      self.cancelButton  = self.cancelButton  || jQuery(this).attr("data-cancel-button");
       self.nil           = self.nil           || jQuery(this).attr("data-nil");
       self.inner_class   = self.inner_class   || jQuery(this).attr("data-inner-class");
       self.html_attrs    = self.html_attrs    || jQuery(this).attr("data-html-attrs");
+      self.original_content    = self.original_content    || jQuery(this).attr("data-original-content");
     });
 
     // Try Rails-id based if parents did not explicitly supply something
@@ -102,15 +127,18 @@ BestInPlaceEditor.prototype = {
     });
 
     // Load own attributes (overrides all others)
-    self.url           = self.element.attr("data-url")          || self.url      || document.location.pathname;
-    self.collection    = self.element.attr("data-collection")   || self.collection;
-    self.formType      = self.element.attr("data-type")         || self.formtype || "input";
-    self.objectName    = self.element.attr("data-object")       || self.objectName;
-    self.attributeName = self.element.attr("data-attribute")    || self.attributeName;
-    self.activator     = self.element.attr("data-activator")    || self.element;
-    self.nil           = self.element.attr("data-nil")          || self.nil      || "-";
-    self.inner_class   = self.element.attr("data-inner-class")  || self.inner_class   || null;
-    self.html_attrs    = self.element.attr("data-html-attrs") || self.html_attrs;
+    self.url           = self.element.attr("data-url")           || self.url      || document.location.pathname;
+    self.collection    = self.element.attr("data-collection")    || self.collection;
+    self.formType      = self.element.attr("data-type")          || self.formtype || "input";
+    self.objectName    = self.element.attr("data-object")        || self.objectName;
+    self.attributeName = self.element.attr("data-attribute")     || self.attributeName;
+    self.activator     = self.element.attr("data-activator")     || self.element;
+    self.okButton      = self.element.attr("data-ok-button")     || self.okButton;
+    self.cancelButton  = self.element.attr("data-cancel-button") || self.cancelButton;
+    self.nil           = self.element.attr("data-nil")           || self.nil      || "-";
+    self.inner_class   = self.element.attr("data-inner-class")   || self.inner_class   || null;
+    self.html_attrs    = self.element.attr("data-html-attrs")    || self.html_attrs;
+    self.original_content    = self.element.attr("data-original-content") || self.original_content;
 
     if (!self.element.attr("data-sanitize")) {
       self.sanitize = true;
@@ -150,7 +178,7 @@ BestInPlaceEditor.prototype = {
       tmp.innerHTML = s;
       s = tmp.textContent || tmp.innerText;
     }
-   return jQuery.trim(s);
+   return jQuery.trim(s).replace(/"/g, '&quot;');
   },
 
   /* Generate the data sent in the POST request */
@@ -177,7 +205,12 @@ BestInPlaceEditor.prototype = {
   // Handlers ////////////////////////////////////////////////////////////////
 
   loadSuccessCallback : function(data) {
-    this.element.html(data[this.objectName]);
+    var response = $.parseJSON($.trim(data));
+    if (response != null && response.hasOwnProperty("display_as")) {
+      this.element.attr("data-original-content", this.element.html());
+      this.original_content = this.element.html();
+      this.element.html(response["display_as"]);
+    }
     this.element.trigger($.Event("ajax:success"), data);
 
     // Binding back after being clicked
@@ -193,7 +226,8 @@ BestInPlaceEditor.prototype = {
       var container = $("<span class='flash-error'></span>").html(value);
       container.purr();
     });
-
+    this.element.trigger($.Event("ajax:error"));
+    
     // Binding back after being clicked
     $(this.activator).bind('click', {editor: this}, this.clickHandler);
   },
@@ -212,11 +246,90 @@ BestInPlaceEditor.prototype = {
 };
 
 
+// Button cases:
+// If no buttons, then blur saves, ESC cancels
+// If just Cancel button, then blur saves, ESC or clicking Cancel cancels (careful of blur event!)
+// If just OK button, then clicking OK saves (careful of blur event!), ESC or blur cancels
+// If both buttons, then clicking OK saves, ESC or clicking Cancel or blur cancels
 BestInPlaceEditor.forms = {
   "input" : {
     activateForm : function() {
       var output = '<form class="form_in_place" action="javascript:void(0)" style="display:inline;">';
-      output += '<input type="text" name="'+ this.attributeName + '" value="' + this.sanitizeValue(this.oldValue) + '"';
+      output += '<input type="text" name="'+ this.attributeName + '" value="' + this.sanitizeValue(this.display_value) + '"';
+      if (this.inner_class != null) {
+        output += ' class="' + this.inner_class + '"';
+      }
+      output += '>';
+      if (this.okButton) {
+        output += '<input type="submit" value="' + this.okButton + '" />'
+      }
+      if (this.cancelButton) {
+        output += '<input type="button" value="' + this.cancelButton + '" />'
+      }
+      output += '</form>';
+      this.element.html(output);
+      this.setHtmlAttributes();
+      this.element.find("input[type='text']")[0].select();
+      this.element.find("form").bind('submit', {editor: this}, BestInPlaceEditor.forms.input.submitHandler);
+      if (this.cancelButton) {
+        this.element.find("input[type='button']").bind('click', {editor: this}, BestInPlaceEditor.forms.input.cancelButtonHandler)
+      }
+      this.element.find("input[type='text']").bind('blur', {editor: this}, BestInPlaceEditor.forms.input.inputBlurHandler);
+      this.element.find("input[type='text']").bind('keyup', {editor: this}, BestInPlaceEditor.forms.input.keyupHandler);
+      this.blurTimer = null;
+      this.userClicked = false;
+    },
+
+    getValue : function() {
+      return this.sanitizeValue(this.element.find("input").val());
+    },
+
+    // When buttons are present, use a timer on the blur event to give precedence to clicks
+    inputBlurHandler : function(event) {
+      if (event.data.editor.okButton) {
+        event.data.editor.blurTimer = setTimeout(function () {
+          if (!event.data.editor.userClicked) {
+            event.data.editor.abort();
+          }
+        }, 500);
+      } else {
+        if (event.data.editor.cancelButton) {
+          event.data.editor.blurTimer = setTimeout(function () {
+            if (!event.data.editor.userClicked) {
+              event.data.editor.update();
+            }
+          }, 500);
+        } else {
+          event.data.editor.update();
+        }
+      }
+    },
+
+    submitHandler : function(event) {
+      event.data.editor.userClicked = true;
+      clearTimeout(event.data.editor.blurTimer);
+      event.data.editor.update();
+    },
+
+    cancelButtonHandler : function(event) {
+      event.data.editor.userClicked = true;
+      clearTimeout(event.data.editor.blurTimer);
+      event.data.editor.abort();
+      event.stopPropagation(); // Without this, click isn't handled
+    },
+
+    keyupHandler : function(event) {
+      if (event.keyCode == 27) {
+        event.data.editor.abort();
+      }
+    }
+  },
+
+  "date" : {
+    activateForm : function() {
+      var that = this,
+        output = '<form class="form_in_place" action="javascript:void(0)" style="display:inline;">';
+      output += '<input type="text" name="'+ this.attributeName + '" value="' + this.sanitizeValue(this.display_value) + '"';
       if (this.inner_class != null) {
         output += ' class="' + this.inner_class + '"';
       }
@@ -225,16 +338,19 @@ BestInPlaceEditor.forms = {
       this.setHtmlAttributes();
       this.element.find('input')[0].select();
       this.element.find("form").bind('submit', {editor: this}, BestInPlaceEditor.forms.input.submitHandler);
-      this.element.find("input").bind('blur',   {editor: this}, BestInPlaceEditor.forms.input.inputBlurHandler);
       this.element.find("input").bind('keyup', {editor: this}, BestInPlaceEditor.forms.input.keyupHandler);
+
+      this.element.find('input')
+        .datepicker({
+            onClose: function() {
+              that.update();
+            }
+          })
+        .datepicker('show');
     },
 
     getValue :  function() {
       return this.sanitizeValue(this.element.find("input").val());
-    },
-
-    inputBlurHandler : function(event) {
-      event.data.editor.update();
     },
 
     submitHandler : function(event) {
@@ -301,8 +417,15 @@ BestInPlaceEditor.forms = {
 
       // construct the form
       var output = '<form action="javascript:void(0)" style="display:inline;"><textarea>';
-      output += this.sanitizeValue(this.oldValue);
-      output += '</textarea></form>';
+      output += this.sanitizeValue(this.display_value);
+      output += '</textarea>';
+      if (this.okButton) {
+        output += '<input type="submit" value="' + this.okButton + '" />'
+      }
+      if (this.cancelButton) {
+        output += '<input type="button" value="' + this.cancelButton + '" />'
+      }
+      output += '</form>';
       this.element.html(output);
       this.setHtmlAttributes();
 
@@ -311,27 +434,57 @@ BestInPlaceEditor.forms = {
       jQuery(this.element.find("textarea")[0]).elastic();
 
       this.element.find("textarea")[0].focus();
+      this.element.find("form").bind('submit', {editor: this}, BestInPlaceEditor.forms.textarea.submitHandler);
+      if (this.cancelButton) {
+        this.element.find("input[type='button']").bind('click', {editor: this}, BestInPlaceEditor.forms.textarea.cancelButtonHandler)
+      }
       this.element.find("textarea").bind('blur', {editor: this}, BestInPlaceEditor.forms.textarea.blurHandler);
       this.element.find("textarea").bind('keyup', {editor: this}, BestInPlaceEditor.forms.textarea.keyupHandler);
+      this.blurTimer = null;
+      this.userClicked = false;
     },
 
     getValue :  function() {
       return this.sanitizeValue(this.element.find("textarea").val());
     },
 
+    // When buttons are present, use a timer on the blur event to give precedence to clicks
     blurHandler : function(event) {
+      if (event.data.editor.okButton) {
+        event.data.editor.blurTimer = setTimeout(function () {
+          if (!event.data.editor.userClicked) {
+            event.data.editor.abortIfConfirm();
+          }
+        }, 500);
+      } else {
+        if (event.data.editor.cancelButton) {
+          event.data.editor.blurTimer = setTimeout(function () {
+            if (!event.data.editor.userClicked) {
+              event.data.editor.update();
+            }
+          }, 500);
+        } else {
+          event.data.editor.update();
+        }
+      }
+    },
+
+    submitHandler : function(event) {
+      event.data.editor.userClicked = true;
+      clearTimeout(event.data.editor.blurTimer);
       event.data.editor.update();
+    },
+
+    cancelButtonHandler : function(event) {
+      event.data.editor.userClicked = true;
+      clearTimeout(event.data.editor.blurTimer);
+      event.data.editor.abortIfConfirm();
+      event.stopPropagation(); // Without this, click isn't handled
     },
 
     keyupHandler : function(event) {
       if (event.keyCode == 27) {
-        BestInPlaceEditor.forms.textarea.abort(event.data.editor);
-      }
-    },
-
-    abort : function(editor) {
-      if (confirm("Are you sure you want to discard your changes?")) {
-        editor.abort();
+        event.data.editor.abortIfConfirm();
       }
     }
   }

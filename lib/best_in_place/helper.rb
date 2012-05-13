@@ -33,7 +33,7 @@ module BestInPlace
       out = "<span class='best_in_place'"
       out << " id='#{BestInPlace::Utils.build_best_in_place_id(object, field)}'"
       out << " data-url='#{opts[:path].blank? ? url_for(object) : url_for(opts[:path])}'"
-      out << " data-object='#{opts[:object_name] || object.class.to_s.gsub("::", "_").underscore}'"
+      out << " data-object='#{opts[:object_name] || BestInPlace::Utils.object_to_key(object)}'"
       out << " data-collection='#{collection.gsub(/'/, "&#39;")}'" unless collection.blank?
       out << " data-attribute='#{field}'"
       out << " data-activator='#{opts[:activator]}'" unless opts[:activator].blank?

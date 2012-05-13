@@ -1,0 +1,13 @@
+<p id="notice"><%= notice %></p>
+<div id="user_account">
+  <h1>Car details</h1>
+  <p style="margin-left:48em">Click to edit</p>
+  <table>
+    <tr>
+      <td>Model</td>
+      <td id="model">
+        <%= best_in_place @car, :model %>
+      </td>
+    </tr>
+  </table>
+</div>

@@ -16,6 +16,14 @@ describe BestInPlace::BestInPlaceHelpers do
         :money => 150
     end
 
+    it "should generate a proper id for namespaced models" do
+      @car = Cuca::Car.create :model => "Ford"
+
+      nk = Nokogiri::HTML.parse(helper.best_in_place @car, :model, :path => helper.cuca_cars_path)
+      span = nk.css("span")
+      span.attribute("id").value.should == "best_in_place_cuca_car_#{@car.id}_model"
+    end
+
     it "should generate a proper span" do
       nk = Nokogiri::HTML.parse(helper.best_in_place @user, :name)
       span = nk.css("span")

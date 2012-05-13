@@ -1,0 +1,20 @@
+<p id="notice"><%= notice %></p>
+<div id="user_account">
+  <h1>User details</h1>
+  <%= link_to "Go back to USERS", users_path %>
+  <p style="margin-left:48em">Click to edit</p>
+  <table>
+    <tr>
+      <td id="name">
+        <%= best_in_place [:admin, @user], :name %>
+      </td>
+    </tr>
+    <tr>
+      <td>Last Name</td>
+      <td id="last_name">
+        <%= best_in_place [:admin, @user], :last_name, :nil => "Nothing to show" %>
+      </td>
+    </tr>
+  </table>
+</div>
+

@@ -18,6 +18,18 @@ describe "JS behaviour", :js => true do
       :description => "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus a lectus et lacus ultrices auctor. Morbi aliquet convallis tincidunt. Praesent enim libero, iaculis at commodo nec, fermentum a dolor. Quisque eget eros id felis lacinia faucibus feugiat et ante. Aenean justo nisi, aliquam vel egestas vel, porta in ligula. Etiam molestie, lacus eget tincidunt accumsan, elit justo rhoncus urna, nec pretium neque mi et lorem. Aliquam posuere, dolor quis pulvinar luctus, felis dolor tincidunt leo, eget pretium orci purus ac nibh. Ut enim sem, suscipit ac elementum vitae, sodales vel sem."
   end
 
+  describe "namespaced controllers" do
+    it "should be able to use array-notation to describe both object and path" do
+      @user.save!
+      visit admin_user_path(@user)
+
+      within("#last_name") { page.should have_content("Napoli") }
+      bip_text @user, :last_name, "Other thing"
+
+      within("#last_name") { page.should have_content("Other thing") }
+    end
+  end
+
   describe "nil option" do
     it "should render the default '-' string when the field is empty" do
       @user.name = ""

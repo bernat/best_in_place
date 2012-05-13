@@ -12,5 +12,9 @@ BipApp::Application.routes.draw do
     resources :cars
   end
 
+  namespace :admin do
+    resources :users
+  end
+
   root :to => "users#index"
 end

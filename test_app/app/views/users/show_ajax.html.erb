@@ -1,0 +1,12 @@
+<%= render :template => 'users/show' %>
+<script>
+  $(document).ready(function () {
+    $('#email').html('');
+    setTimeout( function () { //give time to the other document.ready callbacks to be executed
+      $.get("/users/<%= params[:id]%>/email_field", function(data, status) {
+        $('#email').html(data);
+      });
+    },
+    500);
+  });
+</script>

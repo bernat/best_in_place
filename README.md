@@ -60,6 +60,7 @@ Options:
 - **:display_as**: A model method which will be called in order to display
   this field.
 - **:object_name**: Used for overriding the default params key used for the object (the data-object attribute). Useful for e.g. STI scenarios where best_in_place should post to a common controller for different models.
+- **:data**: Hash of custom data attributes to be added to span. Can be used to provide data to the ajax:success callback.
 
 ###best_in_place_if
 **best_in_place_if condition, object, field, OPTIONS**
@@ -179,6 +180,24 @@ additional `helper_options` hash:
 You can also pass in a proc or lambda like this:
 
     = best_in_place @post, :body, :display_with => lambda { |v| textilize(v).html_safe }
+
+## Ajax success callback
+
+### Binding to ajax:success
+
+The 'ajax:success' event is triggered upon success. Use bind:
+
+    $('.best_in_place').bind("ajax:success", function(){$(this).closest('tr').effect('highlight'));});
+
+### Providing data to the callback
+
+Use the :data option to add HTML5 data attributes to the best_in_place span. For example, in your view:
+
+    <%= best_in_place @user, :name, :data => {:user_name => @user.name} %>
+
+And in your javascript:
+
+    $('.best_in_place').bind("ajax:success", function(){ alert('Name updated for '+$(this).data('userName')); });
 
 ##Non Active Record environments
 We are not planning to support other ORMs apart from Active Record, at least for now. So, you can perfectly consider the following workaround as *the right way* until a specific implementation is done for your ORM.

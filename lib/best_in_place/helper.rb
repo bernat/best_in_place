@@ -72,6 +72,8 @@ module BestInPlace
 
   private
     def build_value_for(object, field, opts)
+      return "" if object.send(field).blank?
+
       if opts[:display_as]
         BestInPlace::DisplayMethods.add_model_method(object.class.to_s, field, opts[:display_as])
         object.send(opts[:display_as]).to_s

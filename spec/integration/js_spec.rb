@@ -465,6 +465,15 @@ describe "JS behaviour", :js => true do
   end
 
   describe "display_with" do
+    it "should show nil text when original value is nil" do
+      @user.description = ""
+      @user.save!
+
+      visit user_path(@user)
+
+      within("#dw_description") { page.should have_content("-") }
+    end
+
     it "should render the money using number_to_currency" do
       @user.save!
       visit user_path(@user)

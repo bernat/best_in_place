@@ -93,7 +93,12 @@ module BestInPlace
     end
 
     def attribute_escape(data)
-      data.to_s.gsub("&", "&amp;").gsub("'", "&apos;") unless data.nil?
+      return unless data
+
+      data.to_s.
+        gsub("&", "&amp;").
+        gsub("'", "&apos;").
+        gsub("\n", "&#10;")
     end
   end
 end

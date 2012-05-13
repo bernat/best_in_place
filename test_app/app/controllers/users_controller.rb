@@ -22,6 +22,16 @@ class UsersController < ApplicationController
     end
   end
 
+  def email_field
+    @user = User.find(params[:id])
+    render :action => :email_field, :layout => false
+  end
+
+  def show_ajax
+    @user = User.find(params[:id])
+    @countries = COUNTRIES.to_a
+  end
+
   def double_init
     @user = User.find(params[:id])
     @countries = COUNTRIES.to_a

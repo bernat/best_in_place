@@ -5,4 +5,4 @@ gemspec
 
 gem 'sqlite3'
 gem 'jquery-rails'
-gem 'rdiscount'
+gem 'kramdown'

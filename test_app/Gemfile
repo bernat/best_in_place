@@ -7,7 +7,7 @@ gem 'best_in_place', :path => ".."
 
 gem 'jquery-rails'
 
-gem 'rdiscount'
+gem 'kramdown'
 
 group :assets do
   gem 'sass-rails',   '~> 3.2.3'

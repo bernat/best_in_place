@@ -41,6 +41,18 @@ describe "JS behaviour", :js => true do
       end
     end
 
+    it "should render the default '-' string when there is an error and if the intial string is '-'" do
+      @user.money = nil
+      @user.save!
+      visit user_path(@user)
+
+      bip_text @user, :money, "abcd"
+
+      within("#money") do
+        page.should have_content("-")
+      end
+    end
+
     it "should render the passed nil value if the field is empty" do
       @user.last_name = ""
       @user.save :validate => false

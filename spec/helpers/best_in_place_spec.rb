@@ -78,6 +78,10 @@ describe BestInPlace::BestInPlaceHelpers do
         @span.attribute("data-cancel-button").should be_nil
       end
 
+      it "should have no Use-Confirmation dialog option by default" do
+        @span.attribute("data-use-confirm").should be_nil
+      end
+
       it "should have no inner_class by default" do
         @span.attribute("data-inner-class").should be_nil
       end
@@ -158,6 +162,13 @@ describe BestInPlace::BestInPlaceHelpers do
         nk = Nokogiri::HTML.parse(out)
         span = nk.css("span")
         span.attribute("data-cancel-button").value.should == "nasty"
+      end
+
+      it "should have the given Use-Confirmation dialog option" do
+        out = helper.best_in_place @user, :name, :use_confirm => "false"
+        nk = Nokogiri::HTML.parse(out)
+        span = nk.css("span")
+        span.attribute("data-use-confirm").value.should == "false"
       end
 
       describe "object_name" do

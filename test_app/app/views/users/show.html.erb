@@ -86,6 +86,14 @@
         <%= best_in_place @user, :money, :display_with => :number_to_currency %>
       </td>
     </tr>
+    <tr>
+      <td>Favorite Movie</td>
+      <td id="favorite_movie">
+        <%- opts = { :ok_button => 'Do it!', :cancel_button => 'Nope', :use_confirm => false } %>
+        <%- opts.delete(:ok_button) if params[:suppress_ok_button] %>
+        <%= best_in_place @user, :favorite_movie, opts %>
+      </td>
+    </tr>
   </table>
   <br />
   <hr />

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120513003308) do
+ActiveRecord::Schema.define(:version => 20120607172609) do
 
   create_table "cars", :force => true do |t|
     t.string "model"
@@ -32,6 +32,7 @@ ActiveRecord::Schema.define(:version => 20120513003308) do
     t.text     "favorite_books"
     t.datetime "birth_date"
     t.float    "money"
+    t.string   "favorite_movie"
   end
 
 end

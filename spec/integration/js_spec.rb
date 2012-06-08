@@ -15,7 +15,8 @@ describe "JS behaviour", :js => true do
       :money => 100,
       :favorite_color => 'Red',
       :favorite_books => "The City of Gold and Lead",
-      :description => "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus a lectus et lacus ultrices auctor. Morbi aliquet convallis tincidunt. Praesent enim libero, iaculis at commodo nec, fermentum a dolor. Quisque eget eros id felis lacinia faucibus feugiat et ante. Aenean justo nisi, aliquam vel egestas vel, porta in ligula. Etiam molestie, lacus eget tincidunt accumsan, elit justo rhoncus urna, nec pretium neque mi et lorem. Aliquam posuere, dolor quis pulvinar luctus, felis dolor tincidunt leo, eget pretium orci purus ac nibh. Ut enim sem, suscipit ac elementum vitae, sodales vel sem."
+      :description => "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus a lectus et lacus ultrices auctor. Morbi aliquet convallis tincidunt. Praesent enim libero, iaculis at commodo nec, fermentum a dolor. Quisque eget eros id felis lacinia faucibus feugiat et ante. Aenean justo nisi, aliquam vel egestas vel, porta in ligula. Etiam molestie, lacus eget tincidunt accumsan, elit justo rhoncus urna, nec pretium neque mi et lorem. Aliquam posuere, dolor quis pulvinar luctus, felis dolor tincidunt leo, eget pretium orci purus ac nibh. Ut enim sem, suscipit ac elementum vitae, sodales vel sem.",
+      :favorite_movie => "The Hitchhiker's Guide to the Galaxy"
   end
 
   describe "namespaced controllers" do
@@ -244,6 +245,23 @@ describe "JS behaviour", :js => true do
     visit user_path(@user)
     within("#favorite_color") do
       page.should have_content('Red')
+    end
+  end
+
+  it "should not ask for confirmation on cancel if it is switched off" do
+    @user.save!
+    visit user_path(@user)
+
+    id = BestInPlace::Utils.build_best_in_place_id @user, :favorite_movie
+    page.execute_script <<-JS
+      $("##{id}").click();
+      $("##{id} input[name='favorite_movie']").val('No good movie');
+      $("##{id} input[type='button']").click();
+    JS
+
+    lambda { page.driver.browser.switch_to.alert }.should raise_exception(Selenium::WebDriver::Error::NoAlertPresentError)
+    within("#favorite_movie") do
+      page.should have_content("The Hitchhiker's Guide to the Galaxy")
     end
   end
 

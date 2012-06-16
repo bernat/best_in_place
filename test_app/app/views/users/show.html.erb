@@ -86,6 +86,12 @@
         <%= best_in_place @user, :money, :display_with => :number_to_currency %>
       </td>
     </tr>
+    <tr>
+      <td>Money with proc</td>
+      <td id="money_proc">
+        <%= best_in_place @user, :money_proc, :display_with => lambda{ |v| number_to_currency(v) } %>
+      </td>
+    </tr>
   </table>
   <br />
   <hr />

@@ -13,6 +13,7 @@ describe "JS behaviour", :js => true do
       :birth_date => Time.now.utc,
       :description => "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus a lectus et lacus ultrices auctor. Morbi aliquet convallis tincidunt. Praesent enim libero, iaculis at commodo nec, fermentum a dolor. Quisque eget eros id felis lacinia faucibus feugiat et ante. Aenean justo nisi, aliquam vel egestas vel, porta in ligula. Etiam molestie, lacus eget tincidunt accumsan, elit justo rhoncus urna, nec pretium neque mi et lorem. Aliquam posuere, dolor quis pulvinar luctus, felis dolor tincidunt leo, eget pretium orci purus ac nibh. Ut enim sem, suscipit ac elementum vitae, sodales vel sem.",
       :money => 100,
+      :money_proc => 100,
       :favorite_color => 'Red',
       :favorite_books => "The City of Gold and Lead",
       :description => "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus a lectus et lacus ultrices auctor. Morbi aliquet convallis tincidunt. Praesent enim libero, iaculis at commodo nec, fermentum a dolor. Quisque eget eros id felis lacinia faucibus feugiat et ante. Aenean justo nisi, aliquam vel egestas vel, porta in ligula. Etiam molestie, lacus eget tincidunt accumsan, elit justo rhoncus urna, nec pretium neque mi et lorem. Aliquam posuere, dolor quis pulvinar luctus, felis dolor tincidunt leo, eget pretium orci purus ac nibh. Ut enim sem, suscipit ac elementum vitae, sodales vel sem."
@@ -506,6 +507,8 @@ describe "JS behaviour", :js => true do
         page.should have_content("$100.00")
       end
     end
+    
+    
 
     it "should still show the custom format after an error" do
       @user.save!
@@ -578,7 +581,71 @@ describe "JS behaviour", :js => true do
 
       within("#alt_money") { page.should have_content("€58.00") }
     end
+    
+    describe "display_with using a lambda" do
+  
 
+      it "should render the money" do
+        @user.save!
+        visit user_path(@user)
+
+        within("#money_proc") do
+          page.should have_content("$100.00")
+        end
+      end
+
+      
+
+      it "should show the new value using the helper after a successful update" do
+        @user.save!
+        visit user_path(@user)
+
+        bip_text @user, :money_proc, "240"
+
+        within("#money_proc") do
+          page.should have_content("$240.00")
+        end
+      end
+
+      it "should display the original content when editing the form" do
+        @user.save!
+        retry_on_timeout do
+          visit user_path(@user)
+
+          id = BestInPlace::Utils.build_best_in_place_id @user, :money_proc
+          page.execute_script <<-JS
+            $("##{id}").click();
+          JS
+
+          text = page.find("##{id} input").value
+          text.should == "100.0"
+        end
+      end
+
+      it "should display the updated content after editing the field two consecutive times" do
+        @user.save!
+
+        retry_on_timeout do
+          visit user_path(@user)
+
+          bip_text @user, :money_proc, "40"
+
+          sleep 1
+
+          id = BestInPlace::Utils.build_best_in_place_id @user, :money_proc
+          page.execute_script <<-JS
+            $("##{id}").click();
+          JS
+
+          sleep 1
+
+          text = page.find("##{id} input").value
+          text.should == "40"
+        end
+      end
+      
+    end
+    
   end
 
   it "should display strings with quotes correctly in fields" do

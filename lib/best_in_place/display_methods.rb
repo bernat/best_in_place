@@ -14,6 +14,8 @@ module BestInPlace
                     BestInPlace::ViewHelpers.send(opts[:method], object.send(opts[:attr]))
                   end
           {:display_as => value}.to_json
+        when :proc
+          {:display_as => opts[:proc].call(object.send(opts[:attr]))}.to_json
         else
           {}.to_json
         end
@@ -33,6 +35,10 @@ module BestInPlace
 
     def add_helper_method(klass, attr, helper_method, helper_options = nil)
       @@table[klass.to_s][attr.to_s] = Renderer.new :method => helper_method.to_sym, :type => :helper, :attr => attr, :helper_options => helper_options
+    end
+    
+    def add_helper_proc(klass, attr, helper_proc)
+      @@table[klass.to_s][attr.to_s] = Renderer.new :type => :proc, :attr => attr, :proc => helper_proc
     end
   end
 end

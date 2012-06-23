@@ -101,7 +101,7 @@ module BestInPlace
       data.to_s.
         gsub("&", "&amp;").
         gsub("'", "&apos;").
-        gsub("\n", "&#10;")
+        gsub(/\r?\n/, "&#10;")
     end
 
     def real_object_for(object)

@@ -303,13 +303,12 @@ thanks to Rails 3.1. Just begin including the gem in your Gemfile:
 
     gem "best_in_place"
 
-After that, specify the use of the jquery, jquery.purr and best in place
+After that, specify the use of the jquery and best in place
 javascripts in your application.js, and optionally specify jquery-ui if
 you want to use jQuery UI datepickers:
 
     //= require jquery
     //= require jquery-ui
-    //= require jquery.purr
     //= require best_in_place
 
 If you want to use jQuery UI datepickers, you should also install and
@@ -340,7 +339,6 @@ After that, install and load all the javascripts from the folder
 **/public/javascripts** in your layouts. They have to be in the order:
 
 * jquery
-* jquery.purr
 * **best_in_place**
 
 You can automatize this installation by doing
@@ -357,6 +355,27 @@ Finally, as for Rails 3.1, just add a binding to prepare all best in place field
       /* Activating Best In Place */
       jQuery(".best_in_place").best_in_place();
     });
+
+---
+
+## Notification
+
+Sometimes your in-place updates will fail due to validation or for some other reason. In such case, you'll want to notify the user somehow. **Best in Place** supports doing so through the best_in_place:error event, and has built-in support for notification via jquery.purr, right out of the box.
+
+To opt into the jquery.purr error notification, just add best_in_place.purr to your javascripts, as described below. If you'd like to develop your own custom form of error notification, you can use best_in_place.purr as an example to guide you.
+
+###Rails 3.1 and higher
+
+It's as simple as adding:
+
+    //= require best_in_place.purr
+
+###Rails 3.0 and lower
+
+You'll have to load the following additional javascripts, in this order, after loading jquery and **best_in_place**:
+
+ * jquery.purr
+ * **best_in_place.purr**
 
 ---
 

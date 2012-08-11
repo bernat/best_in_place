@@ -43,7 +43,7 @@
     <tr>
       <td>Country</td>
       <td id="country">
-        <%= best_in_place @user, :country, :type => :select, :collection => @countries %>
+        <%= best_in_place @user, :country, :type => :select, :collection => @countries, :inner_class => :some_class %>
       </td>
     </tr>
     <tr>

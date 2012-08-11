@@ -134,6 +134,14 @@ describe "JS behaviour", :js => true do
       page.should have_content("France")
     end
   end
+  
+  it "should apply the inner_class option to a select field" do
+    @user.save!
+    visit user_path(@user)
+
+    find('#country span').click
+    find('#country').should have_css('select.some_class')
+  end
 
   it "should be able to use bip_text to change a date field" do
     @user.save!

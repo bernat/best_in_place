@@ -20,6 +20,10 @@
     <%= f.text_field :last_name %>
   </div>
   <div class="field">
+    <%= f.label :height %><br />
+    <%= f.select :height, height_collection %>
+  </div>
+  <div class="field">
     <%= f.label :address %><br />
     <%= f.text_field :address %>
   </div>

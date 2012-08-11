@@ -17,6 +17,12 @@
       </td>
     </tr>
     <tr>
+      <td>Height</td>
+      <td id="height">
+        <%= best_in_place @user, :height, :type => :select, :collection => height_collection.zip(height_collection), :sanitize => false %>
+      </td>
+    </tr>
+    <tr>
       <td>Email</td>
       <td id="email">
         <%= best_in_place @user, :email %>

@@ -6,6 +6,7 @@ describe "Double initialization bug", :js => true do
     @user = User.new :name => "Lucia",
       :last_name => "Napoli",
       :email => "lucianapoli@gmail.com",
+      :height => "5' 5\"",
       :address => "Via Roma 99",
       :zip => "25123",
       :country => "2",

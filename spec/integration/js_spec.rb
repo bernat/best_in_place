@@ -6,6 +6,7 @@ describe "JS behaviour", :js => true do
     @user = User.new :name => "Lucia",
       :last_name => "Napoli",
       :email => "lucianapoli@gmail.com",
+      :height => "5' 5\"",
       :address => "Via Roma 99",
       :zip => "25123",
       :country => "2",
@@ -677,4 +678,42 @@ describe "JS behaviour", :js => true do
       page.should have_link("link in this text", :href => "http://google.es")
     end
   end
+  
+  it "should display single- and double-quotes in values appropriately" do
+    @user.height = %{5' 6"}
+    @user.save!
+    
+    retry_on_timeout do
+      visit user_path(@user)
+      
+      id = BestInPlace::Utils.build_best_in_place_id @user, :height
+      page.execute_script <<-JS
+        $("##{id}").click();
+      JS
+    
+      page.find("##{id} select").value.should eq(%{5' 6"})
+    end
+  end
+  
+  it "should save single- and double-quotes in values appropriately" do
+    @user.height = %{5' 10"}
+    @user.save!
+    
+    retry_on_timeout do
+      visit user_path(@user)
+      
+      id = BestInPlace::Utils.build_best_in_place_id @user, :height
+      page.execute_script <<-JS
+        $("##{id}").click();
+        $("##{id} select").val("5' 7\\\"");
+        $("##{id} select").blur();
+      JS
+      
+      sleep 1
+      
+      @user.reload
+      @user.height.should eq(%{5' 7"})
+    end
+  end
+  
 end

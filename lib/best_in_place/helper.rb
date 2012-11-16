@@ -31,7 +31,14 @@ module BestInPlace
         value = fieldValue ? opts[:collection][1] : opts[:collection][0]
         collection = opts[:collection].to_json
       end
-      out = "<span class='best_in_place'"
+      unless opts[:classes].nil?
+        # the next three lines enable this opt to handle both a stings and a arrays
+        classes = []
+        classes << opts[:classes]
+        classes = classes.flatten
+        opts[:classes] = classes.join(' ')
+      end
+      out = "<span class='best_in_place #{opts[:classes]}'"
       out << " id='#{BestInPlace::Utils.build_best_in_place_id(real_object, field)}'"
       out << " data-url='#{opts[:path].blank? ? url_for(object) : url_for(opts[:path])}'"
       out << " data-object='#{opts[:object_name] || BestInPlace::Utils.object_to_key(real_object)}'"

@@ -61,6 +61,7 @@ Options:
   this field.
 - **:object_name**: Used for overriding the default params key used for the object (the data-object attribute). Useful for e.g. STI scenarios where best_in_place should post to a common controller for different models.
 - **:data**: Hash of custom data attributes to be added to span. Can be used to provide data to the ajax:success callback.
+- **:classes**: Additional classes to apply to the best_in_place span.  Accepts either a string or Array of strings
 
 ###best_in_place_if
 **best_in_place_if condition, object, field, OPTIONS**
@@ -188,6 +189,15 @@ You can also pass in a proc or lambda like this:
 The 'ajax:success' event is triggered upon success. Use bind:
 
     $('.best_in_place').bind("ajax:success", function(){$(this).closest('tr').effect('highlight'));});
+
+To bind a callback that is specific to a particular field, use the 'classes' option in the helper method and 
+then bind to that class. 
+    
+    <%= best_in_place @user, :name, :classes => 'highlight_on_success' %>
+    <%= best_in_place @user, :mail, :classes => 'bounce_on_success' %>
+
+    $('.highlight_on_success').bind("ajax:success", function(){$(this).closest('tr').effect('highlight'));});
+    $('.bounce_on_success').bind("ajax:success", function(){$(this).closest('tr').effect('bounce'));});
 
 ### Providing data to the callback
 

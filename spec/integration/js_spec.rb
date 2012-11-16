@@ -66,6 +66,44 @@ describe "JS behaviour", :js => true do
     end
   end
 
+  it "should be able to update last but one item in list" do
+    @user.save!
+    @user2 = User.create :name => "Test",
+      :last_name => "User",
+      :email => "test@example.com",
+      :height => "5' 5\"",
+      :address => "Via Roma 99",
+      :zip => "25123",
+      :country => "2",
+      :receive_email => false,
+      :birth_date => Time.now.utc,
+      :description => "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus a lectus et lacus ultrices auctor. Morbi aliquet convallis tincidunt. Praesent enim libero, iaculis at commodo nec, fermentum a dolor. Quisque eget eros id felis lacinia faucibus feugiat et ante. Aenean justo nisi, aliquam vel egestas vel, porta in ligula. Etiam molestie, lacus eget tincidunt accumsan, elit justo rhoncus urna, nec pretium neque mi et lorem. Aliquam posuere, dolor quis pulvinar luctus, felis dolor tincidunt leo, eget pretium orci purus ac nibh. Ut enim sem, suscipit ac elementum vitae, sodales vel sem.",
+      :money => 100,
+      :money_proc => 100,
+      :favorite_color => 'Red',
+      :favorite_books => "The City of Gold and Lead",
+      :description => "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus a lectus et lacus ultrices auctor. Morbi aliquet convallis tincidunt. Praesent enim libero, iaculis at commodo nec, fermentum a dolor. Quisque eget eros id felis lacinia faucibus feugiat et ante. Aenean justo nisi, aliquam vel egestas vel, porta in ligula. Etiam molestie, lacus eget tincidunt accumsan, elit justo rhoncus urna, nec pretium neque mi et lorem. Aliquam posuere, dolor quis pulvinar luctus, felis dolor tincidunt leo, eget pretium orci purus ac nibh. Ut enim sem, suscipit ac elementum vitae, sodales vel sem."
+
+    visit users_path
+    within("tr#user_#{@user.id} > .name > span") do
+      page.should have_content("Lucia")
+      page.should have_xpath("//a[contains(@href,'#{user_path(@user)}')]")
+    end
+
+    id = BestInPlace::Utils.build_best_in_place_id @user, :name
+    page.execute_script <<-JS
+      $("#edit_#{@user.id}").click();
+      $("##{id} input[name='name']").val('Lisa');
+      $("##{id} form").submit();
+    JS
+    # binding.pry
+    # visit users_path
+    within("tr#user_#{@user.id} > .name > span") do
+      page.should have_content('Lisa')
+      page.should have_xpath("//a[contains(@href,'#{user_path(@user)}')]")
+    end
+  end  
+
   it "should be able to use bip_text to update a text field" do
     @user.save!
     visit user_path(@user)

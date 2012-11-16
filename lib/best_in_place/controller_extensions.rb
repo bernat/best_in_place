@@ -6,7 +6,11 @@ module BestInPlace
 
   private
     def respond_bip_ok(obj)
-      klass = obj.class.to_s
+      if obj.respond_to?(:id)
+        klass = "#{obj.class}_#{obj.id}"
+      else
+        klass = obj.class.to_s
+      end
       param_key = BestInPlace::Utils.object_to_key(obj)
       updating_attr = params[param_key].keys.first
 

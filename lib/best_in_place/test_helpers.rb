@@ -1,11 +1,13 @@
 module BestInPlace
   module TestHelpers
+    
+    include ActionView::Helpers::JavaScriptHelper
 
     def bip_area(model, attr, new_value)
       id = BestInPlace::Utils.build_best_in_place_id model, attr
       page.execute_script <<-JS
         jQuery("##{id}").click();
-        jQuery("##{id} form textarea").val('#{new_value}');
+        jQuery("##{id} form textarea").val('#{escape_javascript new_value.to_s}');
         jQuery("##{id} form textarea").blur();
       JS
     end
@@ -14,7 +16,7 @@ module BestInPlace
       id = BestInPlace::Utils.build_best_in_place_id model, attr
       page.execute_script <<-JS
         jQuery("##{id}").click();
-        jQuery("##{id} input[name='#{attr}']").val('#{new_value}');
+        jQuery("##{id} input[name='#{attr}']").val('#{escape_javascript new_value.to_s}');
         jQuery("##{id} form").submit();
       JS
     end

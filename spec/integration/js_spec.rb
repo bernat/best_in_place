@@ -745,6 +745,26 @@ describe "JS behaviour", :js => true do
     end
   end
 
+  it "should keep the same value after multipe edits" do
+    @user.save!
+
+    retry_on_timeout do
+      visit double_init_user_path(@user)
+
+      bip_area @user, :description, "A <a href=\"http://google.es\">link in this text</a> not sanitized."
+      visit double_init_user_path(@user)
+
+      page.should have_link("link in this text", :href => "http://google.es")
+
+      id = BestInPlace::Utils.build_best_in_place_id @user, :description
+      page.execute_script <<-JS
+        $("##{id}").click();
+      JS
+
+      page.find("##{id} textarea").value.should eq("A <a href=\"http://google.es\">link in this text</a> not sanitized.")
+    end
+  end
+
   it "should display single- and double-quotes in values appropriately" do
     @user.height = %{5' 6"}
     @user.save!
@@ -780,6 +800,55 @@ describe "JS behaviour", :js => true do
       @user.reload
       @user.height.should eq(%{5' 7"})
     end
+  end
+
+  it "should escape javascript in test helpers" do
+    @user.save!
+
+    retry_on_timeout do
+      visit user_path(@user)
+
+      bip_text @user, :last_name, "Other '); alert('hi');"
+      sleep 1
+
+      @user.reload
+      @user.last_name.should eq("Other '); alert('hi');")
+    end
+  end
+
+  it "should save text in database without encoding" do
+    @user.save!
+
+    retry_on_timeout do
+      visit user_path(@user)
+
+      bip_text @user, :last_name, "Other \"thing\""
+      sleep 1
+
+      @user.reload
+      @user.last_name.should eq("Other \"thing\"")
+    end
+  end
+
+  it "should not strip html tags" do
+    @user.save!
+
+    retry_on_timeout do
+      visit user_path(@user)
+
+      bip_text @user, :last_name, "<script>alert('hi');</script>"
+      within("#last_name") { page.should have_content("<script>alert('hi');</script>") }
+
+      visit user_path(@user)
+
+      id = BestInPlace::Utils.build_best_in_place_id @user, :last_name
+      page.execute_script <<-JS
+        $("##{id}").click();
+      JS
+
+      page.find("##{id} input").value.should eq("<script>alert('hi');</script>")
+    end
+
   end
 
 end

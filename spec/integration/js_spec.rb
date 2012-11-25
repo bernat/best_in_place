@@ -65,6 +65,28 @@ describe "JS behaviour", :js => true do
         page.should have_content("Nothing to show")
       end
     end
+
+    it "should render html content for nil option" do
+      @user.favorite_color = ""
+      @user.save!
+      visit user_path(@user)
+      within("#favorite_color") do
+        page.should have_xpath("//span[@class='nil']")
+      end
+    end
+
+    it "should render html content for nil option after edit" do
+      @user.favorite_color = "Blue"
+      @user.save!
+      visit user_path(@user)
+
+      bip_text @user, :favorite_color, ""
+
+      within("#favorite_color") do
+        page.should have_xpath("//span[@class='nil']")
+      end
+    end
+
   end
 
   it "should be able to update last but one item in list" do

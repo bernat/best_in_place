@@ -670,6 +670,43 @@ describe "JS behaviour", :js => true do
       within("#alt_money") { page.should have_content("€58.00") }
     end
 
+    it "should keep link after edit with display_with :link_to" do
+      @user.save!
+      visit users_path
+      within("tr#user_#{@user.id} > .name > span") do
+        page.should have_content("Lucia")
+        page.should have_xpath("//a[contains(@href,'#{user_path(@user)}')]")
+      end
+      id = BestInPlace::Utils.build_best_in_place_id @user, :name
+      page.execute_script <<-JS
+        jQuery("#edit_#{@user.id}").click();
+        jQuery("##{id} input[name='name']").val('Maria Lucia');
+        jQuery("##{id} form").submit();
+      JS
+      within("tr#user_#{@user.id} > .name > span") do
+        page.should have_content("Maria Lucia")
+        page.should have_xpath("//a[contains(@href,'#{user_path(@user)}')]")
+      end
+    end
+
+    it "should keep link after aborting edit with display_with :link_to" do
+      @user.save!
+      visit users_path
+      within("tr#user_#{@user.id} > .name > span") do
+        page.should have_content("Lucia")
+        page.should have_xpath("//a[contains(@href,'#{user_path(@user)}')]")
+      end
+      id = BestInPlace::Utils.build_best_in_place_id @user, :name
+      page.execute_script <<-JS
+        jQuery("#edit_#{@user.id}").click();
+        jQuery("##{id} input[name='name']").blur();
+      JS
+      within("tr#user_#{@user.id} > .name > span") do
+        page.should have_content("Lucia")
+        page.should have_xpath("//a[contains(@href,'#{user_path(@user)}')]")
+      end
+    end
+
     describe "display_with using a lambda" do
 
 
@@ -895,6 +932,7 @@ describe "JS behaviour", :js => true do
 
     bip_select @user, :country, "France"
 
+    sleep 1 # Increase if browser is slow
     id = BestInPlace::Utils.build_best_in_place_id @user, :country
     page.execute_script <<-JS
       $("##{id}").click();

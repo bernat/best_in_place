@@ -267,6 +267,22 @@ describe "JS behaviour", :js => true do
     end
   end
 
+  it "should be able to use bip_bool to change a boolean value using an image" do
+    @user.save!
+    visit user_path(@user)
+
+    within("#receive_email_image") do
+      page.should have_xpath("//img[contains(@src,'no.png')]")
+    end
+
+    bip_bool @user, :receive_email
+
+    visit user_path(@user)
+    within("#receive_email_image") do
+      page.should have_xpath("//img[contains(@src,'yes.png')]")
+    end
+  end
+
   it "should correctly use an OK submit button when so configured for an input" do
     @user.save!
     visit user_path(@user)

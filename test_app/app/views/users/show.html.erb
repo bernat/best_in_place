@@ -59,6 +59,12 @@
       </td>
     </tr>
     <tr>
+      <td>Receive newsletter (image)?</td>
+      <td id="receive_email_image">
+        <%= best_in_place @user, :receive_email, :type => :checkbox, :collection => [image_tag('no.png'), image_tag('yes.png')] %>
+      </td>
+    </tr>
+    <tr>
       <td>Favorite color</td>
       <td id="favorite_color">
         <%- opts = { :ok_button => 'Do it!', :cancel_button => 'Nope' } %>

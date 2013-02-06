@@ -25,7 +25,7 @@
     <tr>
       <td>Email</td>
       <td id="email">
-        <%= best_in_place @user, :email %>
+        <%= best_in_place @user, :email, type: :email %>
       </td>
     </tr>
     <tr>
@@ -43,7 +43,7 @@
     <tr>
       <td>ZIP</td>
       <td id="zip">
-        <%= best_in_place @user, :zip %>
+        <%= best_in_place @user, :zip, type: :number %>
       </td>
     </tr>
     <tr>

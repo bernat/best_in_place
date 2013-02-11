@@ -188,7 +188,7 @@ You can also pass in a proc or lambda like this:
 
 The 'ajax:success' event is triggered upon success. Use bind:
 
-    $('.best_in_place').bind("ajax:success", function(){$(this).closest('tr').effect('highlight'));});
+    $('.best_in_place').bind("ajax:success", function () {$(this).closest('tr').effect('highlight'); });
 
 To bind a callback that is specific to a particular field, use the 'classes' option in the helper method and 
 then bind to that class. 

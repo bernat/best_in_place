@@ -21,7 +21,7 @@ The editor works by PUTting the updated value to the server and GETting the upda
 - Compatible with **textarea**
 - Compatible with **select** dropdown with custom collections
 - Compatible with custom boolean values (same usage of **checkboxes**)
-- Compatible with **jQuery UI Datepickers**
+- Compatible with **jQuery UI Datepickers**, and others through events
 - Sanitize HTML and trim spaces of user's input on user's choice
 - Displays server-side **validation** errors
 - Allows external activator
@@ -386,6 +386,32 @@ You'll have to load the following additional javascripts, in this order, after l
 
  * jquery.purr
  * **best_in_place.purr**
+
+---
+
+## Datepickers
+
+Upon activation, date fields will fire the best_in_place:datepicker event. To opt into the jQuery UI datepicker, simply include best_in_place.jqueryui.datepicker.js in your page. If you use a different datepicker, or if you wish to specify more options, create your own event response.
+
+For the Bootstrap datepicker ([this](http://www.eyecon.ro/bootstrap-datepicker/), [this](https://github.com/eternicode/bootstrap-datepicker), or [that](https://github.com/Nerian/bootstrap-datepicker-rails)) best_in_place.bootstrap.datepicker.js should work.
+
+###Rails 3.1 and higher
+
+Add:
+
+    //= require best_in_place.jquerui.datepicker
+
+###Rails 3.0 and lower
+
+Load the following after loading jquery and **best_in_place**:
+
+ * **best_in_place.jqueryui.datepicker**
+
+###Date format###
+
+To specify a format, add date-format to the best in place call:
+
+    <%= best_in_place @user, :birthday, :data => {:date-format => 'mm/dd/yy' %>
 
 ---
 

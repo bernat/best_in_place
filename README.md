@@ -406,13 +406,13 @@ Add:
 
 Load the following after loading jquery and **best_in_place**:
 
- * **best_in_place.datepicker**
+ * **best_in_place.datepicker.js**
 
 ###Date format###
 
 To specify a format for a given instance, add date-format to the best in place call:
 
-    <%= best_in_place @user, :birthday, :data => {:date-format => 'mm/dd/yy' %>
+    <%= best_in_place @user, :birthday, :data => {:date-format => 'mm/dd/yy'} %>
 
 ---
 

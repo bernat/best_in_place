@@ -354,7 +354,7 @@ describe "JS behaviour", :js => true do
     page.execute_script <<-JS
       $("##{id}").click();
       $("##{id} input[name='favorite_color']").val('Blue');
-      $("##{id} input[name='favorite_color']").blur();
+      $("##{id} input[name='favorite_color']").blur().blur();
     JS
     sleep 1 # Increase if browser is slow
 
@@ -377,7 +377,7 @@ describe "JS behaviour", :js => true do
     page.should have_no_css("##{id} input[type='submit']")
     page.execute_script <<-JS
       $("##{id} input[name='favorite_color']").val('Blue');
-      $("##{id} input[name='favorite_color']").blur();
+      $("##{id} input[name='favorite_color']").blur().blur();
     JS
     sleep 1 # Increase if browser is slow
 
@@ -442,7 +442,7 @@ describe "JS behaviour", :js => true do
     page.execute_script <<-JS
       $("##{id}").click();
       $("##{id} textarea").val('1Q84');
-      $("##{id} textarea").blur();
+      $("##{id} textarea").blur().blur();
     JS
     sleep 1 # Increase if browser is slow
     page.driver.browser.switch_to.alert.accept
@@ -466,7 +466,7 @@ describe "JS behaviour", :js => true do
     page.should have_no_css("##{id} input[type='submit']")
     page.execute_script <<-JS
       $("##{id} textarea").val('1Q84');
-      $("##{id} textarea").blur();
+      $("##{id} textarea").blur().blur();
     JS
     sleep 1 # Increase if browser is slow
 
@@ -715,7 +715,7 @@ describe "JS behaviour", :js => true do
       id = BestInPlace::Utils.build_best_in_place_id @user, :name
       page.execute_script <<-JS
         jQuery("#edit_#{@user.id}").click();
-        jQuery("##{id} input[name='name']").blur();
+        jQuery("##{id} input[name='name']").blur().blur();
       JS
       within("tr#user_#{@user.id} > .name > span") do
         page.should have_content("Lucia")
@@ -866,7 +866,7 @@ describe "JS behaviour", :js => true do
       page.execute_script <<-JS
         $("##{id}").click();
         $("##{id} select").val("5' 7\\\"");
-        $("##{id} select").blur();
+        $("##{id} select").blur().blur();
       JS
 
       sleep 1

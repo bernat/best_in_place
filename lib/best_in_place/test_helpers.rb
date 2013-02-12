@@ -8,7 +8,7 @@ module BestInPlace
       page.execute_script <<-JS
         jQuery("##{id}").click();
         jQuery("##{id} form textarea").val('#{escape_javascript new_value.to_s}');
-        jQuery("##{id} form textarea").blur();
+        jQuery("##{id} form textarea").blur().blur();
       JS
     end
 

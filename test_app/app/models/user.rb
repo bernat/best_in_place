@@ -22,6 +22,6 @@ class User < ActiveRecord::Base
   end
 
   def markdown_desc
-    RDiscount.new(description).to_html.html_safe
+    Kramdown::Document.new(description).to_html.html_safe
   end
 end

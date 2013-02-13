@@ -34,17 +34,17 @@ describe "JS behaviour", :js => true do
   end
 
   describe "nil option" do
-    it "should render the default '-' string when the field is empty" do
+    it "should render an em-dash when the field is empty" do
       @user.name = ""
       @user.save :validate => false
       visit user_path(@user)
 
       within("#name") do
-        page.should have_content("-")
+        page.should have_content("\u2014")
       end
     end
 
-    it "should render the default '-' string when there is an error and if the intial string is '-'" do
+    it "should render the default em-dash string when there is an error and if the intial string is em-dash" do
       @user.money = nil
       @user.save!
       visit user_path(@user)
@@ -52,7 +52,7 @@ describe "JS behaviour", :js => true do
       bip_text @user, :money, "abcd"
 
       within("#money") do
-        page.should have_content("-")
+        page.should have_content("\u2014")
       end
     end
 
@@ -590,7 +590,7 @@ describe "JS behaviour", :js => true do
 
       visit user_path(@user)
 
-      within("#dw_description") { page.should have_content("-") }
+      within("#dw_description") { page.should have_content("\u2014") }
     end
 
     it "should render the money using number_to_currency" do

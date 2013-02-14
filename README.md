@@ -21,7 +21,7 @@ The editor works by PUTting the updated value to the server and GETting the upda
 - Compatible with **textarea**
 - Compatible with **select** dropdown with custom collections
 - Compatible with custom boolean values (same usage of **checkboxes**)
-- Compatible with **jQuery UI Datepickers**, and others through events
+- Compatible with **jQuery UI Datepickers**, and [others through events](#datepickers)
 - Sanitize HTML and trim spaces of user's input on user's choice
 - Displays server-side **validation** errors
 - Allows external activator
@@ -184,9 +184,21 @@ You can also pass in a proc or lambda like this:
 
     = best_in_place @post, :body, :display_with => lambda { |v| textilize(v).html_safe }
 
-## Ajax success callback
+## Callbacks
 
-### Binding to ajax:success
+## Available callbacks
+
+Best in place provides the following callbacks:
+
+- **best_in_place:activate** When the in place form is activated
+- **best_in_place:abort** When the update is aborted (escape key, cancel button, or cancelled by popup)
+- **best_in_place:datepicker** When a date field form is activated. Used for the jQuery datepicker. See [Datepickers](#datepickers).
+- **best_in_place:deactivate**: When the in place form is deactivated
+- **ajax:success**, **best_in_place:success**: When the ajax call has returns successfully. best_in_place:success is available if you have conflicts with ajax:success.
+- **ajax:error**, **best_in_place:error**: When the ajax call returns an error condition. best_in_place:error is available if you have conflicts with ajax:error.
+- **best_in_place:update** Called when the form field is updated and the ajax has been started (not returned.)
+
+### Binding to ajax:success or best_in_place:success
 
 The 'ajax:success' event is triggered upon success. Use bind:
 

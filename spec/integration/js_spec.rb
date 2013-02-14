@@ -34,17 +34,17 @@ describe "JS behaviour", :js => true do
   end
 
   describe "nil option" do
-    it "should render the default '-' string when the field is empty" do
+    it "should render an em-dash when the field is empty" do
       @user.name = ""
       @user.save :validate => false
       visit user_path(@user)
 
       within("#name") do
-        page.should have_content("-")
+        page.should have_content("\u2014")
       end
     end
 
-    it "should render the default '-' string when there is an error and if the intial string is '-'" do
+    it "should render the default em-dash string when there is an error and if the intial string is em-dash" do
       @user.money = nil
       @user.save!
       visit user_path(@user)
@@ -52,7 +52,7 @@ describe "JS behaviour", :js => true do
       bip_text @user, :money, "abcd"
 
       within("#money") do
-        page.should have_content("-")
+        page.should have_content("\u2014")
       end
     end
 
@@ -87,6 +87,36 @@ describe "JS behaviour", :js => true do
       end
     end
 
+    it "should display an empty input field the second time I open it" do
+      @user.favorite_locale = nil
+      @user.save!
+      visit user_path(@user)
+
+      within("#favorite_locale") do
+        page.should have_content("N/A")
+      end
+
+      id = BestInPlace::Utils.build_best_in_place_id @user, :favorite_locale
+      page.execute_script <<-JS
+        $("##{id}").click();
+      JS
+
+      text = page.find("##{id} input").value
+      text.should == ""
+
+      page.execute_script <<-JS
+        $("##{id} input[name='favorite_locale']").blur();
+        $("##{id} input[name='favorite_locale']").blur();
+      JS
+      sleep 1
+
+      page.execute_script <<-JS
+        $("##{id}").click();
+      JS
+
+      text = page.find("##{id} input").value
+      text.should == ""
+    end
   end
 
   it "should be able to update last but one item in list" do
@@ -196,6 +226,14 @@ describe "JS behaviour", :js => true do
     end
   end
 
+  it "should apply the inner_class option to a select field" do
+    @user.save!
+    visit user_path(@user)
+
+    find('#country span').click
+    find('#country').should have_css('select.some_class')
+  end
+
   it "should be able to use bip_text to change a date field" do
     @user.save!
     today = Time.now.utc.to_date
@@ -295,6 +333,12 @@ describe "JS behaviour", :js => true do
     page.execute_script <<-JS
       $("##{id}").click();
       $("##{id} input[name='favorite_color']").val('Blue');
+    JS
+
+    page.find("##{id} input[type='submit']").value.should == 'Do it!'
+    page.should have_css("##{id} input[type='submit'].custom-submit.other-custom-submit")
+
+    page.execute_script <<-JS
       $("##{id} input[type='submit']").click();
     JS
 
@@ -316,6 +360,12 @@ describe "JS behaviour", :js => true do
     page.execute_script <<-JS
       $("##{id}").click();
       $("##{id} input[name='favorite_color']").val('Blue');
+    JS
+
+    page.find("##{id} input[type='button']").value.should == 'Nope'
+    page.should have_css("##{id} input[type='button'].custom-cancel.other-custom-cancel")
+
+    page.execute_script <<-JS
       $("##{id} input[type='button']").click();
     JS
 
@@ -354,7 +404,7 @@ describe "JS behaviour", :js => true do
     page.execute_script <<-JS
       $("##{id}").click();
       $("##{id} input[name='favorite_color']").val('Blue');
-      $("##{id} input[name='favorite_color']").blur().blur();
+      $("##{id} input[name='favorite_color']").blur();
     JS
     sleep 1 # Increase if browser is slow
 
@@ -377,7 +427,8 @@ describe "JS behaviour", :js => true do
     page.should have_no_css("##{id} input[type='submit']")
     page.execute_script <<-JS
       $("##{id} input[name='favorite_color']").val('Blue');
-      $("##{id} input[name='favorite_color']").blur().blur();
+      $("##{id} input[name='favorite_color']").blur();
+      $("##{id} input[name='favorite_color']").blur();
     JS
     sleep 1 # Increase if browser is slow
 
@@ -442,7 +493,8 @@ describe "JS behaviour", :js => true do
     page.execute_script <<-JS
       $("##{id}").click();
       $("##{id} textarea").val('1Q84');
-      $("##{id} textarea").blur().blur();
+      $("##{id} textarea").blur();
+      $("##{id} textarea").blur();
     JS
     sleep 1 # Increase if browser is slow
     page.driver.browser.switch_to.alert.accept
@@ -466,7 +518,8 @@ describe "JS behaviour", :js => true do
     page.should have_no_css("##{id} input[type='submit']")
     page.execute_script <<-JS
       $("##{id} textarea").val('1Q84');
-      $("##{id} textarea").blur().blur();
+      $("##{id} textarea").blur();
+      $("##{id} textarea").blur();
     JS
     sleep 1 # Increase if browser is slow
 
@@ -590,7 +643,7 @@ describe "JS behaviour", :js => true do
 
       visit user_path(@user)
 
-      within("#dw_description") { page.should have_content("-") }
+      within("#dw_description") { page.should have_content("\u2014") }
     end
 
     it "should render the money using number_to_currency" do
@@ -715,7 +768,8 @@ describe "JS behaviour", :js => true do
       id = BestInPlace::Utils.build_best_in_place_id @user, :name
       page.execute_script <<-JS
         jQuery("#edit_#{@user.id}").click();
-        jQuery("##{id} input[name='name']").blur().blur();
+        jQuery("##{id} input[name='name']").blur();
+        jQuery("##{id} input[name='name']").blur();
       JS
       within("tr#user_#{@user.id} > .name > span") do
         page.should have_content("Lucia")
@@ -866,7 +920,8 @@ describe "JS behaviour", :js => true do
       page.execute_script <<-JS
         $("##{id}").click();
         $("##{id} select").val("5' 7\\\"");
-        $("##{id} select").blur().blur();
+        $("##{id} select").blur();
+        $("##{id} select").blur();
       JS
 
       sleep 1

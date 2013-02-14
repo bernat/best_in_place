@@ -2,7 +2,6 @@
 //= require jquery-ui
 //= require best_in_place
 //= require best_in_place.purr
-//= require best_in_place.datepicker
 //= require_self
 
 $(document).ready(function() {

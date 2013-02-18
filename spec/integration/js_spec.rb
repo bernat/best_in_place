@@ -554,6 +554,20 @@ describe "JS behaviour", :js => true do
     page.should have_content('Last name was updated!')
   end
 
+  it "should fire off a callback when retrieve success with empty data" do
+    @user.save!
+    visit user_path(@user)
+
+    id = BestInPlace::Utils.build_best_in_place_id @user, :last_name
+    page.execute_script <<-JS
+      $("##{id}").bind('best_in_place:success', function() { $('body').append('Updated successfully!') });
+    JS
+
+    page.should have_no_content('Updated successfully!')
+    bip_text @user, :last_name, 'Empty'
+    page.should have_content('Updated successfully!')
+  end
+
   describe "display_as" do
     it "should render the address with a custom format" do
       @user.save!

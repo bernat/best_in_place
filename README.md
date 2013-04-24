@@ -58,7 +58,7 @@ Options:
 - **:cancel_button_class**: (Inputs and textareas only) Specifies any extra classes to set on the Cancel button.
 - **:sanitize**: True by default. If set to false the input/textarea will accept html tags.
 - **:html_attrs**: Hash of html arguments, such as maxlength, default-value etc.
-- **:inner_class**: Class that is set to the rendered form.
+- **:inner_class**: Class that is set to the rendered input.
 - **:display_as**: A model method which will be called in order to display
   this field.
 - **:object_name**: Used for overriding the default params key used for the object (the data-object attribute). Useful for e.g. STI scenarios where best_in_place should post to a common controller for different models.

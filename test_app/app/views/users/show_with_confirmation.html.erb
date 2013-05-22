@@ -1,0 +1,131 @@
+<p id="notice"><%= notice %></p>
+<div id="user_account">
+  <h1>User details with confirmation</h1>
+  <%= link_to "Go back to USERS", users_path %>
+  <p style="margin-left:48em">Click to edit</p>
+  <table>
+    <tr>
+      <td>Name <a id="editme" href="#">(edit me)</a></td>
+      <td id="name">
+        <%= best_in_place @user, :name, :type => :input, :activator => "#editme", confirm: params[:confirmation] %>
+      </td>
+    </tr>
+    <tr>
+      <td>Last Name</td>
+      <td id="last_name">
+        <%= best_in_place @user, :last_name, :nil => "Nothing to show", confirm: params[:confirmation] %>
+      </td>
+    </tr>
+    <tr>
+      <td>Height</td>
+      <td id="height">
+        <%= best_in_place @user, :height, :type => :select, :collection => height_collection.zip(height_collection), :sanitize => false, confirm: params[:confirmation] %>
+      </td>
+    </tr>
+    <tr>
+      <td>Email</td>
+      <td id="email">
+        <%= best_in_place @user, :email, confirm: params[:confirmation] %>
+      </td>
+    </tr>
+    <tr>
+      <td>Birth date</td>
+      <td id="birth_date">
+        <%= best_in_place @user, :birth_date, :type => :date, confirm: params[:confirmation] %>
+      </td>
+    </tr>
+    <tr>
+      <td>Address</td>
+      <td id="address">
+        <%= best_in_place @user, :address, :display_as => :address_format, confirm: params[:confirmation] %>
+      </td>
+    </tr>
+    <tr>
+      <td>ZIP</td>
+      <td id="zip">
+        <%= best_in_place @user, :zip, confirm: params[:confirmation] %>
+      </td>
+    </tr>
+    <tr>
+      <td>Country</td>
+      <td id="country">
+        <%= best_in_place @user, :country, :type => :select, :collection => @countries, :inner_class => :some_class, confirm: params[:confirmation] %>
+      </td>
+    </tr>
+    <tr>
+      <td>Receive newsletter?</td>
+      <td id="receive_email">
+        <%= best_in_place @user, :receive_email, :type => :checkbox, :collection => ["No thanks", "Yes of course"], confirm: params[:confirmation] %>
+      </td>
+    </tr>
+    <tr>
+      <td>Receive newsletter (image)?</td>
+      <td id="receive_email_image">
+        <%= best_in_place @user, :receive_email, :type => :checkbox, :collection => [image_tag('no.png'), image_tag('yes.png')], confirm: params[:confirmation] %>
+      </td>
+    </tr>
+    <tr>
+      <td>Favorite color</td>
+      <td id="favorite_color">
+        <%- opts = { :ok_button => 'Do it!', :cancel_button => 'Nope', :ok_button_class => 'custom-submit other-custom-submit', :cancel_button_class => 'custom-cancel other-custom-cancel', confirm: params[:confirmation] } %>
+        <%- opts.delete(:ok_button) if params[:suppress_ok_button] %>
+        <%- opts[:nil] = "<span class='nil'>Click to add your favorite color</span>" %>
+        <%= best_in_place @user, :favorite_color, opts %>
+      </td>
+    </tr>
+    <tr>
+      <td>Favorite locale</td>
+      <td id="favorite_locale">
+        <%= best_in_place @user, :favorite_locale, :nil => "N/A", confirm: params[:confirmation] %>
+      </td>
+    </tr>
+    <tr>
+      <td>Favorite books</td>
+      <td id="favorite_books">
+        <%- opts = { :type => :textarea, :ok_button => 'Save', :cancel_button => 'Cancel', confirm: params[:confirmation] } %>
+        <%- opts.delete(:ok_button) if params[:suppress_ok_button] %>
+        <%= best_in_place @user, :favorite_books, opts %>
+      </td>
+    </tr>
+    <tr>
+      <td>User description</td>
+      <td id="description">
+        <%= best_in_place @user, :description, :display_as => :markdown_desc, :type => :textarea, :sanitize => false, confirm: params[:confirmation] %>
+      </td>
+    </tr>
+    <tr>
+      <td>Simple-formatted user description</td>
+      <td id="dw_description">
+        <%= best_in_place @user, :description, :display_with => :simple_format, :type => :textarea, confirm: params[:confirmation] %>
+      </td>
+    </tr>
+    <tr>
+      <td>Money</td>
+      <td id="money">
+        <%= best_in_place @user, :money, :display_with => :number_to_currency, confirm: params[:confirmation] %>
+      </td>
+    </tr>
+    <tr>
+      <td>Money with proc</td>
+      <td id="money_proc">
+        <%= best_in_place @user, :money_proc, :display_with => lambda{ |v| v.blank? ? "No money" : number_to_currency(v) }, confirm: params[:confirmation] %>
+      </td>
+    </tr>
+    <tr>
+      <td>Money with custom helper</td>
+      <td id="money_custom">
+        <%= best_in_place @user, :money_custom, :display_with => lambda { |x| bb(x) }, confirm: params[:confirmation] %>
+      </td>
+    </tr>
+    <tr>
+      <td>Favorite Movie</td>
+      <td id="favorite_movie">
+        <%- opts = { :ok_button => 'Do it!', :cancel_button => 'Nope', :use_confirm => false, confirm: params[:confirmation] } %>
+        <%- opts.delete(:ok_button) if params[:suppress_ok_button] %>
+        <%= best_in_place @user, :favorite_movie, opts %>
+      </td>
+    </tr>
+  </table>
+  <p>More information on <a href="http://github.com/bernat/best_in_place">github</a> or <a href="http://blog.bernatfarrero.com/in-place-editing-with-javascript-jquery-and-rails-3/">bernatfarrero.com</a>.</p>
+
+</div>

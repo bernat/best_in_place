@@ -122,4 +122,19 @@ feature "Confirmation", :js => true do
     bip_bool(@user, :receive_email)
     expect{ page.driver.browser.switch_to.alert }.to raise_exception(Selenium::WebDriver::Error::NoAlertPresentError)
   end
+
+  context 'accept after after confirmation rejected' do
+    it 'should update object for checkbox' do
+      visit user_path(@user, confirmation: 'Are you sure?')
+
+      bip_bool(@user, :receive_email)
+      page.driver.browser.switch_to.alert.dismiss
+
+      bip_bool(@user, :receive_email)
+      page.driver.browser.switch_to.alert.accept
+
+      page.should have_content('Yes of course')
+      @user.reload.receive_email.should == true
+    end
+  end
 end

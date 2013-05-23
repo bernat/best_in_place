@@ -154,6 +154,12 @@ the :json format. This is a simple example showing an update action using it:
     end
 
 
+## Confirmation
+
+    <%= best_in_place @user, :name, :type => :input,  :confirm => "Are you sure?"%>
+
+Use `confirm` option to show confirmation alert window before update value.
+
 ## Custom display methods
 
 ### Using `display_as`

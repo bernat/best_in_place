@@ -17,7 +17,7 @@ class UsersController < ApplicationController
     @countries = COUNTRIES.to_a
 
     respond_to do |format|
-      format.html # show.html.erb
+      format.html { render :show_with_confirmation if params[:confirmation] }
       format.xml  { render :xml => @user }
     end
   end

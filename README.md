@@ -48,6 +48,7 @@ Options:
 - **:type** It can be only [:input, :textarea, :select, :checkbox, :date (>= 1.0.4)] or if undefined it defaults to :input.
 - **:collection**: In case you are using the :select type then you must specify the collection of values it takes. In case you are
   using the :checkbox type you can specify the two values it can take, or otherwise they will default to Yes and No.
+- **:collection_url**: Used for :select type.  This is an alternative to :collection that will allow lazy loading of collection.  Useful for big lists/forms.  See [Select] for details.
 - **:path**: URL to which the updating action will be sent. If not defined it defaults to the :object path.
 - **:nil**: The nil param defines the content displayed in case no value is defined for that field. It can be something like "click me to edit".
   If not defined it will show *"-"*.
@@ -113,6 +114,14 @@ Examples (code in the views):
 
 Of course it can take an instance or global variable for the collection, just remember the structure `[[key, value], [key, value],...]`.
 The key can be a string or an integer.
+
+As an alternative, the collection can be lazily loaded when the user clicks on the target.  This can be useful in situations where a lot of best_in_place elements are used (like a grid/spreadsheet view) and preloading all the data is not ideal.
+
+<%= best_in_place @user, :country_id, :type => :select, :collection_url => all_applicable_countries(@user, :format=>:json), :display_with=>lambda{|v|my_helper_method(v)} %>
+
+In this case, the controller method all_applicable_countries would return an array of arrays (just as specified in :collection) in JSON format (e.g., render :json=>[[1, woodworking], [2, guitar_shredding] ... ] )
+
+Since the data is lazily loaded when collection_url is specified, you may to display something other than the ID. This can be specified using display_with as seen above.
 
 ### Checkbox
 
@@ -192,9 +201,9 @@ The 'ajax:success' event is triggered upon success. Use bind:
 
     $('.best_in_place').bind("ajax:success", function () {$(this).closest('tr').effect('highlight'); });
 
-To bind a callback that is specific to a particular field, use the 'classes' option in the helper method and 
-then bind to that class. 
-    
+To bind a callback that is specific to a particular field, use the 'classes' option in the helper method and
+then bind to that class.
+
     <%= best_in_place @user, :name, :classes => 'highlight_on_success' %>
     <%= best_in_place @user, :mail, :classes => 'bounce_on_success' %>
 

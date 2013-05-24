@@ -19,11 +19,19 @@ module BestInPlace
 
       collection = nil
       value = nil
-      if opts[:type] == :select && !opts[:collection].blank?
-        value = real_object.send(field)
-        display_value = Hash[opts[:collection]].stringify_keys[value.to_s]
-        collection = opts[:collection].to_json
+
+      if opts[:type] == :select
+        if !opts[:collection].blank?
+          value = real_object.send(field)
+          display_value = Hash[opts[:collection]].stringify_keys[value.to_s]
+          collection = opts[:collection].to_json
+        else
+          value = real_object.send(field)
+          collection = [].to_json
+        end
       end
+
+
       if opts[:type] == :checkbox
         value = !!real_object.send(field)
         if opts[:collection].blank? || opts[:collection].size != 2
@@ -44,6 +52,7 @@ module BestInPlace
       out << " data-url='#{opts[:path].blank? ? url_for(object) : url_for(opts[:path])}'"
       out << " data-object='#{opts[:object_name] || BestInPlace::Utils.object_to_key(real_object)}'"
       out << " data-collection='#{attribute_escape(collection)}'" unless collection.blank?
+      out << " data-collection-url=#{url_for(opts[:collection_url])}" unless opts[:collection_url].blank?
       out << " data-attribute='#{field}'"
       out << " data-activator='#{opts[:activator]}'" unless opts[:activator].blank?
       out << " data-ok-button='#{opts[:ok_button]}'" unless opts[:ok_button].blank?

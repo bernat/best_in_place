@@ -9,3 +9,4 @@ test_app/log/*.log
 test_app/tmp/**/*
 
 .rvmrc
+coverage

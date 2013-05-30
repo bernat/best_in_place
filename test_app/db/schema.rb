@@ -32,9 +32,9 @@ ActiveRecord::Schema.define(:version => 20130213224102) do
     t.text     "favorite_books"
     t.datetime "birth_date"
     t.float    "money"
+    t.string   "favorite_movie"
     t.float    "money_proc"
     t.string   "height"
-    t.string   "favorite_movie"
     t.string   "favorite_locale"
   end
 

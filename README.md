@@ -21,7 +21,7 @@ The editor works by PUTting the updated value to the server and GETting the upda
 - Compatible with **textarea**
 - Compatible with **select** dropdown with custom collections
 - Compatible with custom boolean values (same usage of **checkboxes**)
-- Compatible with **jQuery UI Datepickers**
+- Compatible with **jQuery UI Datepickers**, and [others through events](#datepickers)
 - Sanitize HTML and trim spaces of user's input on user's choice
 - Displays server-side **validation** errors
 - Allows external activator
@@ -184,9 +184,21 @@ You can also pass in a proc or lambda like this:
 
     = best_in_place @post, :body, :display_with => lambda { |v| textilize(v).html_safe }
 
-## Ajax success callback
+## Callbacks
 
-### Binding to ajax:success
+### Available callbacks
+
+Best in place provides the following callbacks:
+
+- **best_in_place:activate**: When the in place form is activated
+- **best_in_place:abort**: When the update is aborted (escape key, cancel button, or cancelled by popup)
+- **best_in_place:datepicker**: When a date field form is activated. Used for the jQuery datepicker. See [Datepickers](#datepickers).
+- **best_in_place:deactivate**: When the in place form is deactivated
+- **ajax:success**, **best_in_place:success**: When the ajax call has returns successfully. best_in_place:success is available if you have conflicts with ajax:success.
+- **ajax:error**, **best_in_place:error**: When the ajax call returns an error condition. best_in_place:error is available if you have conflicts with ajax:error.
+- **best_in_place:update**: Called when the form field is updated and the ajax has been started (not returned.)
+
+### Binding to ajax:success or best_in_place:success
 
 The 'ajax:success' event is triggered upon success. Use bind:
 
@@ -304,6 +316,10 @@ The parameters are defined here (some are method-specific):
 * **new_value** (only **bip_area** and **bip_text**): the new value with which to fill the BIP field.
 * **name** (only **bip_select**): the name to select from the dropdown selector.
 
+To use include them in your test config:
+
+    include BestInPlace::TestHelpers
+
 ---
 
 ##Installation
@@ -315,16 +331,23 @@ thanks to Rails 3.1. Just begin including the gem in your Gemfile:
 
     gem "best_in_place"
 
-After that, specify the use of the jquery and best in place
-javascripts in your application.js, and optionally specify jquery-ui if
-you want to use jQuery UI datepickers:
+After that, specify the use of the jquery and best in place javascripts in your application.js:
 
     //= require jquery
-    //= require jquery-ui
     //= require best_in_place
 
-If you want to use jQuery UI datepickers, you should also install and
-load your preferred jquery-ui CSS file and associated assets.
+If you want to use jQuery UI datepickers, add [jquery-ui-rails](https://github.com/joliss/jquery-ui-rails) to your Gemfile:
+
+    gem "jquery-ui-rails"
+    gem "best_in_place"
+
+and add (at least) jquery.ui.datepicker to your application.js:
+
+    //= require jquery
+    //= require jquery.ui.datepicker
+    //= require best_in_place
+
+[jquery-ui-rails](https://github.com/joliss/jquery-ui-rails) includes all CSS and associated assets, so you are done. (What happened to jquery-ui? See [Datepickers](#datepickers).)
 
 Then, just add a binding to prepare all best in place fields when the document is ready:
 
@@ -358,7 +381,7 @@ You can automatize this installation by doing
     rails g best_in_place:setup
 
 If you want to use jQuery UI datepickers, you should also install and
-load jquery-ui.js as well as your preferred jquery-ui CSS file and
+load jquery-ui.js, as well as your preferred jquery-ui CSS file and
 associated assets.
 
 Finally, as for Rails 3.1, just add a binding to prepare all best in place fields when the document is ready:
@@ -388,6 +411,35 @@ You'll have to load the following additional javascripts, in this order, after l
 
  * jquery.purr
  * **best_in_place.purr**
+
+---
+
+## Datepickers
+
+Upon activation, date fields will fire the best_in_place:datepicker event. By default the jQuery UI datepicker is enabled. If you use a different datepicker, or if you wish to specify more options, create your own event response. See the included bootstrap handler for an example.
+
+###jquery-rails 2.3.0 and below
+
+As of [jquery-rails](https://github.com/rails/jquery-rails) 3.0, jquery-ui is no longer included. If you use jquery-rails 2.3.0 and below, and you can't upgrade to 3.0, and you can't use [jquery-ui-rails](https://github.com/joliss/jquery-ui-rails), your application.js changes to
+
+    //= require jquery
+    //= require jquery-ui
+    //= require best_in_place
+
+Do not include jquery-ui-rails in your Gemfile, and then include the desired jQuery UI CSS and associated assets.
+
+###Bootstrap datepicker
+
+For a Bootstrap datepicker ([eyecon](http://www.eyecon.ro/bootstrap-datepicker/), [eternicode](https://github.com/eternicode/bootstrap-datepicker), or [bootstrap-datepicker-rails](https://github.com/Nerian/bootstrap-datepicker-rails)) add the provided best_in_place.datepicker.bootstrap to application.js:
+
+    //= require best_in_place
+    //= require best_in_place.datepicker.bootstrap
+
+###Date format###
+
+To specify a format for a given instance, add date-format to the best in place call:
+
+    <%= best_in_place @user, :birthday, :data => {:date-format => 'mm/dd/yy'} %>
 
 ---
 

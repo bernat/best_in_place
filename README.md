@@ -316,6 +316,10 @@ The parameters are defined here (some are method-specific):
 * **new_value** (only **bip_area** and **bip_text**): the new value with which to fill the BIP field.
 * **name** (only **bip_select**): the name to select from the dropdown selector.
 
+To use include them in your test config:
+
+    include BestInPlace::TestHelpers
+
 ---
 
 ##Installation
@@ -327,17 +331,23 @@ thanks to Rails 3.1. Just begin including the gem in your Gemfile:
 
     gem "best_in_place"
 
-After that, specify the use of the jquery and best in place
-javascripts in your application.js, and optionally specify jquery-ui and 
-best_in_place.datepicker if you want to use jQuery UI datepickers:
+After that, specify the use of the jquery and best in place javascripts in your application.js:
 
     //= require jquery
-    //= require jquery-ui
     //= require best_in_place
-    //= require best_in_place.datepicker
 
-If you want to use jQuery UI datepickers, you should also install and
-load your preferred jquery-ui CSS file and associated assets.
+If you want to use jQuery UI datepickers, add [jquery-ui-rails](https://github.com/joliss/jquery-ui-rails) to your Gemfile:
+
+    gem "jquery-ui-rails"
+    gem "best_in_place"
+
+and add (at least) jquery.ui.datepicker to your application.js:
+
+    //= require jquery
+    //= require jquery.ui.datepicker
+    //= require best_in_place
+
+[jquery-ui-rails](https://github.com/joliss/jquery-ui-rails) includes all CSS and associated assets, so you are done. (What happened to jquery-ui? See [Datepickers](#datepickers).)
 
 Then, just add a binding to prepare all best in place fields when the document is ready:
 
@@ -371,7 +381,7 @@ You can automatize this installation by doing
     rails g best_in_place:setup
 
 If you want to use jQuery UI datepickers, you should also install and
-load jquery-ui.js, best_in_place.datepicker.js, as well as your preferred jquery-ui CSS file and
+load jquery-ui.js, as well as your preferred jquery-ui CSS file and
 associated assets.
 
 Finally, as for Rails 3.1, just add a binding to prepare all best in place fields when the document is ready:
@@ -406,21 +416,24 @@ You'll have to load the following additional javascripts, in this order, after l
 
 ## Datepickers
 
-Upon activation, date fields will fire the best_in_place:datepicker event. To opt into the jQuery UI datepicker, simply include best_in_place.datepicker.js in your page. If you use a different datepicker, or if you wish to specify more options, create your own event response.
+Upon activation, date fields will fire the best_in_place:datepicker event. By default the jQuery UI datepicker is enabled. If you use a different datepicker, or if you wish to specify more options, create your own event response. See the included bootstrap handler for an example.
 
-For a Bootstrap datepicker ([this](http://www.eyecon.ro/bootstrap-datepicker/), [this](https://github.com/eternicode/bootstrap-datepicker), or [that](https://github.com/Nerian/bootstrap-datepicker-rails)) the provided best_in_place.datepicker.bootstrap response should work.
+###jquery-rails 2.3.0 and below
 
-###Rails 3.1 and higher
+As of [jquery-rails](https://github.com/rails/jquery-rails) 3.0, jquery-ui is no longer included. If you use jquery-rails 2.3.0 and below, and you can't upgrade to 3.0, and you can't use [jquery-ui-rails](https://github.com/joliss/jquery-ui-rails), your application.js changes to
 
-Add:
+    //= require jquery
+    //= require jquery-ui
+    //= require best_in_place
 
-    //= require best_in_place.datepicker
+Do not include jquery-ui-rails in your Gemfile, and then include the desired jQuery UI CSS and associated assets.
 
-###Rails 3.0 and lower
+###Bootstrap datepicker
 
-Load the following after loading jquery and **best_in_place**:
+For a Bootstrap datepicker ([eyecon](http://www.eyecon.ro/bootstrap-datepicker/), [eternicode](https://github.com/eternicode/bootstrap-datepicker), or [bootstrap-datepicker-rails](https://github.com/Nerian/bootstrap-datepicker-rails)) add the provided best_in_place.datepicker.bootstrap to application.js:
 
- * **best_in_place.datepicker.js**
+    //= require best_in_place
+    //= require best_in_place.datepicker.bootstrap
 
 ###Date format###
 

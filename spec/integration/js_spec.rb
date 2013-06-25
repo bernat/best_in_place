@@ -105,8 +105,7 @@ describe "JS behaviour", :js => true do
       text.should == ""
 
       page.execute_script <<-JS
-        $("##{id} input[name='favorite_locale']").blur();
-        $("##{id} input[name='favorite_locale']").blur();
+        $("##{id} input[name='favorite_locale']").blur().blur();
       JS
       sleep 1
 
@@ -427,8 +426,7 @@ describe "JS behaviour", :js => true do
     page.should have_no_css("##{id} input[type='submit']")
     page.execute_script <<-JS
       $("##{id} input[name='favorite_color']").val('Blue');
-      $("##{id} input[name='favorite_color']").blur();
-      $("##{id} input[name='favorite_color']").blur();
+      $("##{id} input[name='favorite_color']").blur().blur();
     JS
     sleep 1 # Increase if browser is slow
 
@@ -493,8 +491,7 @@ describe "JS behaviour", :js => true do
     page.execute_script <<-JS
       $("##{id}").click();
       $("##{id} textarea").val('1Q84');
-      $("##{id} textarea").blur();
-      $("##{id} textarea").blur();
+      $("##{id} textarea").blur().blur();
     JS
     sleep 1 # Increase if browser is slow
     page.driver.browser.switch_to.alert.accept
@@ -518,8 +515,7 @@ describe "JS behaviour", :js => true do
     page.should have_no_css("##{id} input[type='submit']")
     page.execute_script <<-JS
       $("##{id} textarea").val('1Q84');
-      $("##{id} textarea").blur();
-      $("##{id} textarea").blur();
+      $("##{id} textarea").blur().blur();
     JS
     sleep 1 # Increase if browser is slow
 
@@ -538,34 +534,6 @@ describe "JS behaviour", :js => true do
     within("#address") do
       page.should have_content("Via Roma 99")
     end
-  end
-
-  it "should fire off a callback when updating a field" do
-    @user.save!
-    visit user_path(@user)
-
-    id = BestInPlace::Utils.build_best_in_place_id @user, :last_name
-    page.execute_script <<-JS
-      $("##{id}").bind('best_in_place:update', function() { $('body').append('Last name was updated!') });
-    JS
-
-    page.should have_no_content('Last name was updated!')
-    bip_text @user, :last_name, 'Another'
-    page.should have_content('Last name was updated!')
-  end
-
-  it "should fire off a callback when retrieve success with empty data" do
-    @user.save!
-    visit user_path(@user)
-
-    id = BestInPlace::Utils.build_best_in_place_id @user, :last_name
-    page.execute_script <<-JS
-      $("##{id}").bind('best_in_place:success', function() { $('body').append('Updated successfully!') });
-    JS
-
-    page.should have_no_content('Updated successfully!')
-    bip_text @user, :last_name, 'Empty'
-    page.should have_content('Updated successfully!')
   end
 
   describe "display_as" do
@@ -782,8 +750,7 @@ describe "JS behaviour", :js => true do
       id = BestInPlace::Utils.build_best_in_place_id @user, :name
       page.execute_script <<-JS
         jQuery("#edit_#{@user.id}").click();
-        jQuery("##{id} input[name='name']").blur();
-        jQuery("##{id} input[name='name']").blur();
+        jQuery("##{id} input[name='name']").blur().blur();
       JS
       within("tr#user_#{@user.id} > .name > span") do
         page.should have_content("Lucia")
@@ -947,8 +914,7 @@ describe "JS behaviour", :js => true do
       page.execute_script <<-JS
         $("##{id}").click();
         $("##{id} select").val("5' 7\\\"");
-        $("##{id} select").blur();
-        $("##{id} select").blur();
+        $("##{id} select").blur().blur();
       JS
 
       sleep 1
@@ -1037,5 +1003,103 @@ describe "JS behaviour", :js => true do
     JS
 
     page.should have_css("##{id} select option[value='4'][selected='selected']")
+  end
+
+  describe "events" do
+    it "should fire off correct callbacks when updating a field" do
+      @user.save!
+      visit user_path(@user)
+
+      id = BestInPlace::Utils.build_best_in_place_id @user, :last_name
+      page.execute_script <<-JS
+        $("##{id}").bind('best_in_place:activate', function() { $('body').append('Activate called!!') });
+        $("##{id}").bind('best_in_place:update', function() { $('body').append('Update called!!') });
+        $("##{id}").bind('ajax:success', function() { $('body').append('Ajax success called!!') });
+        $("##{id}").bind('best_in_place:success', function() { $('body').append('BIP success called!!') });
+        $("##{id}").bind('best_in_place:deactivate', function() { $('body').append('Deactivate called!!') });
+      JS
+
+      page.should have_no_content('called!!')
+      bip_text @user, :last_name, 'Another'
+      page.should have_content('Activate called!!')
+      page.should have_content('Update called!!')
+      page.should have_content('Ajax success called!!')
+      page.should have_content('BIP success called!!')
+      page.should have_content('Deactivate called!!')
+    end
+
+    it "should fire off correct callbacks when updating fails" do
+      @user.save!
+      visit user_path(@user)
+
+      id = BestInPlace::Utils.build_best_in_place_id @user, :last_name
+      page.execute_script <<-JS
+        $("##{id}").bind('ajax:error', function() { $('body').append('Ajax error called!!') });
+        $("##{id}").bind('best_in_place:error', function() { $('body').append('BIP error called!!') });
+        $("##{id}").bind('best_in_place:deactivate', function() { $('body').append('Deactivate called!!') });
+      JS
+
+      page.should have_no_content('called!!')
+      bip_text @user, :last_name, ''
+      page.should have_content('Ajax error called!!')
+      page.should have_content('BIP error called!!')
+      page.should have_content('Deactivate called!!')
+    end
+
+    it "should fire abort callback when cancelled" do
+      @user.save!
+      visit user_path(@user)
+
+      id = BestInPlace::Utils.build_best_in_place_id @user, :favorite_color
+      page.execute_script <<-JS
+        $("##{id}").bind('best_in_place:abort', function() { $('body').append('BIP abort called!!') });
+        $("##{id}").bind('best_in_place:deactivate', function() { $('body').append('Deactivate called!!') });
+        $("##{id}").click();
+        $("##{id} input[name='favorite_color']").val('Blue');
+      JS
+
+      page.should have_no_content('called!!')
+      page.execute_script <<-JS
+        $("##{id} input[type='button']").click();
+      JS
+      page.should have_content('BIP abort called!!')
+      page.should have_content('Deactivate called!!')
+    end
+
+    it "should not call update on blur when a text field is unchanged" do
+      @user.save!
+      visit user_path(@user)
+
+      id = BestInPlace::Utils.build_best_in_place_id @user, :last_name
+      page.execute_script <<-JS
+        $("##{id}").bind('best_in_place:update', function() { $('body').append('Update called!!') });
+        $("##{id}").click();
+      JS
+
+      page.should have_no_content('Update called!!')
+      page.execute_script <<-JS
+        $("##{id}").blur().blur();
+      JS
+      page.should have_no_content('Update called!!')
+    end
+
+    it "should not call update on blur when a datepicker field is unchanged" do
+      @user.save!
+      visit user_path(@user)
+
+      id = BestInPlace::Utils.build_best_in_place_id @user, :birth_date
+      page.execute_script <<-JS
+        $("##{id}").bind('best_in_place:datepicker', function() { $('body').append('Datepicker called!!') });
+        $("##{id}").bind('best_in_place:update', function() { $('body').append('Update called!!') });
+        $("##{id}").click();
+      JS
+
+      page.should have_content('Datepicker called!!')
+      page.should have_no_content('Update called!!')
+      page.execute_script <<-JS
+        $("##{id}").blur().blur();
+      JS
+      page.should have_no_content('Update called!!')
+    end
   end
 end

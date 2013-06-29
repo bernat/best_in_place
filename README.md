@@ -186,11 +186,13 @@ You can also pass in a proc or lambda like this:
 
 ## Ajax success callback
 
-### Binding to ajax:success
+### Handling ajax:success
 
-The 'ajax:success' event is triggered upon success. Use bind:
+The 'ajax:success' event is triggered upon success. Use [on](http://api.jquery.com/on/) to attach an event handler:
 
-    $('.best_in_place').bind("ajax:success", function () {$(this).closest('tr').effect('highlight'); });
+    $('body').on('ajax:success', '.best_in_place', function() { 
+      $(this).closest('tr').effect('highlight');
+    });
 
 To bind a callback that is specific to a particular field, use the 'classes' option in the helper method and 
 then bind to that class. 
@@ -198,8 +200,13 @@ then bind to that class.
     <%= best_in_place @user, :name, :classes => 'highlight_on_success' %>
     <%= best_in_place @user, :mail, :classes => 'bounce_on_success' %>
 
-    $('.highlight_on_success').bind("ajax:success", function(){$(this).closest('tr').effect('highlight'));});
-    $('.bounce_on_success').bind("ajax:success", function(){$(this).closest('tr').effect('bounce'));});
+    $('body').on('ajax:success', '.highlight_on_success', function() {
+      $(this).closest('tr').effect('highlight'));
+    });
+
+    $('body').on('ajax:success', '.bounce_on_success', function() {
+      $(this).closest('tr').effect('bounce'));
+    });
 
 ### Providing data to the callback
 
@@ -209,7 +216,9 @@ Use the :data option to add HTML5 data attributes to the best_in_place span. For
 
 And in your javascript:
 
-    $('.best_in_place').bind("ajax:success", function(){ alert('Name updated for '+$(this).data('userName')); });
+    $('body').on('ajax:success', '.best_in_place', function() {
+      alert('Name updated for ' + $(this).data('userName'));
+    });
 
 ##Non Active Record environments
 We are not planning to support other ORMs apart from Active Record, at least for now. So, you can perfectly consider the following workaround as *the right way* until a specific implementation is done for your ORM.

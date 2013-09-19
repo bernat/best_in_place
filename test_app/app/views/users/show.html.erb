@@ -49,7 +49,7 @@
     <tr>
       <td>Country</td>
       <td id="country">
-        <%= best_in_place @user, :country, :type => :select, :collection => @countries %>
+        <%= best_in_place @user, :country, :type => :select, :collection => @countries, :inner_class => :some_class %>
       </td>
     </tr>
     <tr>
@@ -67,10 +67,16 @@
     <tr>
       <td>Favorite color</td>
       <td id="favorite_color">
-        <%- opts = { :ok_button => 'Do it!', :cancel_button => 'Nope' } %>
+        <%- opts = { :ok_button => 'Do it!', :cancel_button => 'Nope', :ok_button_class => 'custom-submit other-custom-submit', :cancel_button_class => 'custom-cancel other-custom-cancel' } %>
         <%- opts.delete(:ok_button) if params[:suppress_ok_button] %>
         <%- opts[:nil] = "<span class='nil'>Click to add your favorite color</span>" %>
         <%= best_in_place @user, :favorite_color, opts %>
+      </td>
+    </tr>
+    <tr>
+      <td>Favorite locale</td>
+      <td id="favorite_locale">
+        <%= best_in_place @user, :favorite_locale, :nil => "N/A" %>
       </td>
     </tr>
     <tr>
@@ -102,7 +108,7 @@
     <tr>
       <td>Money with proc</td>
       <td id="money_proc">
-        <%= best_in_place @user, :money_proc, :display_with => lambda{ |v| number_to_currency(v) } %>
+        <%= best_in_place @user, :money_proc, :display_with => lambda{ |v| v.blank? ? "No money" : number_to_currency(v) } %>
       </td>
     </tr>
     <tr>

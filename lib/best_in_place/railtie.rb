@@ -1,6 +1,6 @@
 module BestInPlace
   class Railtie < Rails::Railtie
-    initializer "set view helpers" do
+    config.after_initialize do
       BestInPlace::ViewHelpers = ActionView::Base.new
     end
   end

@@ -10,7 +10,7 @@ class User < ActiveRecord::Base
     :presence => {:message => "can't be blank"}
   validates :email,
     :presence => {:message => "can't be blank"},
-    :format => {:with => /^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/i, :message => "has wrong email format"}
+    :format => {:with => /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i, :message => "has wrong email format"}
   validates :zip, :numericality => true, :length => { :minimum => 5 }
   validates_numericality_of :money, :allow_blank => true
   validates_numericality_of :money_proc, :allow_blank => true

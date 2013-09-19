@@ -1,5 +1,4 @@
 rvm:
-  - 1.9.2
   - 1.9.3
 
 env: "RAILS_ENV=test DISPLAY=:99.0"

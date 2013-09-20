@@ -21,7 +21,9 @@ module BestInPlace
       value = nil
       if opts[:type] == :select && !opts[:collection].blank?
         value = real_object.send(field)
-        display_value = Hash[opts[:collection]].stringify_keys[value.to_s]
+        if !opts[:display_as] && !opts[:display_with]
+            display_value = Hash[opts[:collection]].stringify_keys[value.to_s]
+        end
         collection = opts[:collection].to_json
       end
       if opts[:type] == :checkbox
@@ -29,7 +31,9 @@ module BestInPlace
         if opts[:collection].blank? || opts[:collection].size != 2
           opts[:collection] = ["No", "Yes"]
         end
-        display_value = value ? opts[:collection][1] : opts[:collection][0]
+        if !opts[:display_as] && !opts[:display_with]
+            display_value = value ? opts[:collection][1] : opts[:collection][0]
+        end
         collection = opts[:collection].to_json
       end
       classes = ["best_in_place"]

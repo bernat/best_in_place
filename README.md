@@ -132,6 +132,16 @@ prepare a `$.datepicker.setDefaults` call with the preferences of your choice.
 More information about datepicker and setting defaults can be found
 [here](http://docs.jquery.com/UI/Datepicker/$.datepicker.setDefaults)
 
+
+### Datetime ###
+
+    <%= best_in_place @user, :delivery_datetime, :type => :datetime, :display_with => :datetime_format %>
+
+Works as :date above but adds sliders for the time. You'll need datetime jQuery plugin [here](http://trentrichardson.com/examples/timepicker/), jQuery UI with datepicker and slider (easiest way is to use the jQuery-UI gem [here](https://github.com/joliss/jquery-ui-rails)) and also something in your model (as in the example above) or a helper :display_as that returns the field in the correct format - the same format as in `$.datepicker.setDefaults` and then a space and the time. If this is not set correctly when you come to edit the datetime, the time will revert to 00:00. See [here](http://www.ruby-doc.org/core-1.9.3/Time.html#method-i-strftime) for `strftime` documentation.
+
+
+
+
 ## Controller response with respond_with_bip
 
 Best in place provides a utility method you should use in your controller in
@@ -192,9 +202,9 @@ The 'ajax:success' event is triggered upon success. Use bind:
 
     $('.best_in_place').bind("ajax:success", function () {$(this).closest('tr').effect('highlight'); });
 
-To bind a callback that is specific to a particular field, use the 'classes' option in the helper method and 
-then bind to that class. 
-    
+To bind a callback that is specific to a particular field, use the 'classes' option in the helper method and
+then bind to that class.
+
     <%= best_in_place @user, :name, :classes => 'highlight_on_success' %>
     <%= best_in_place @user, :mail, :classes => 'bounce_on_success' %>
 

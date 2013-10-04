@@ -45,7 +45,7 @@ Params:
 
 Options:
 
-- **:type** It can be only [:input, :textarea, :select, :checkbox, :date (>= 1.0.4)] or if undefined it defaults to :input.
+- **:type** It can be only [:input, :textarea, :select, :checkbox, :date (>= 1.0.4), :datetime] or if undefined it defaults to :input.
 - **:collection**: In case you are using the :select type then you must specify the collection of values it takes. In case you are
   using the :checkbox type you can specify the two values it can take, or otherwise they will default to Yes and No.
 - **:path**: URL to which the updating action will be sent. If not defined it defaults to the :object path.
@@ -137,7 +137,7 @@ More information about datepicker and setting defaults can be found
 
     <%= best_in_place @user, :delivery_datetime, :type => :datetime, :display_with => :datetime_format %>
 
-Works as :date above but adds sliders for the time. You'll need datetime jQuery plugin [here](http://trentrichardson.com/examples/timepicker/), jQuery UI with datepicker and slider (easiest way is to use the jQuery-UI gem [here](https://github.com/joliss/jquery-ui-rails)) and also something in your model (as in the example above) or a helper :display_as that returns the field in the correct format - the same format as in `$.datepicker.setDefaults` and then a space and the time. If this is not set correctly when you come to edit the datetime, the time will revert to 00:00. See [here](http://www.ruby-doc.org/core-1.9.3/Time.html#method-i-strftime) for `strftime` documentation.
+Works as `:date` above but adds sliders for the time. You'll need datetime jQuery plugin [here](http://trentrichardson.com/examples/timepicker/), jQuery UI with datepicker and slider (easiest way is to use the jQuery-UI gem [here](https://github.com/joliss/jquery-ui-rails)) and also something in your model (as in the example above) or a helper `:display_as` that returns the field in the correct format - the same format as in `$.datepicker.setDefaults` and then a space and the time in "HH:MM" format. If this is not set correctly when you come to edit the datetime, the time will revert to 00:00. See [here](http://www.ruby-doc.org/core-1.9.3/Time.html#method-i-strftime) for `strftime` documentation.
 
 
 

@@ -1,5 +1,6 @@
 //= require jquery
-//= require jquery-ui
+//= require jquery.ui.all
+//=require jquery-ui-timepicker-addon.js
 //= require best_in_place
 //= require best_in_place.purr
 //= require_self
@@ -25,7 +26,7 @@ jQuery(function($){
     dayNamesShort: ['Dug','Dln','Dmt','Dmc','Djs','Dvn','Dsb'],
     dayNamesMin: ['Dg','Dl','Dt','Dc','Dj','Dv','Ds'],
     weekHeader: 'Sm',
-    dateFormat: 'dd-mm-yy',
+    dateFormat: 'dd-mm-yy', //helper display_with or model display_as needs to return this
     firstDay: 1,
     isRTL: false,
     showMonthAfterYear: false,

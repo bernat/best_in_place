@@ -24,4 +24,9 @@ class User < ActiveRecord::Base
   def markdown_desc
     RDiscount.new(description).to_html.html_safe
   end
+
+  def datetime_format
+    # same format as the datepicker.setDefaults dateFormat then with an hour and minute after it or editing doesn't work.
+    delivery.strftime("%d-%m-%Y %H:%M")
+  end
 end

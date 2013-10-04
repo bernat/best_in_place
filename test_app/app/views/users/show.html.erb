@@ -41,6 +41,13 @@
       </td>
     </tr>
     <tr>
+      <td>Delivery Date and Time</td>
+      <td id="delivery">
+        <%= best_in_place @user, :delivery, :display_as => :datetime_format, :type => :datetime %>
+      </td>
+    </tr>
+
+    <tr>
       <td>ZIP</td>
       <td id="zip">
         <%= best_in_place @user, :zip %>

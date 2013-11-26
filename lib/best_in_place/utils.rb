@@ -14,8 +14,7 @@ module BestInPlace
     end
 
     def object_to_key(object)
-      return object.class.to_s.underscore unless object.class.respond_to?(:model_name)
-      ActiveModel::Naming.param_key(object.class)
+      return object.class.to_s.underscore
     end
   end
 end

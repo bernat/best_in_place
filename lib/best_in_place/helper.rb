@@ -26,7 +26,10 @@ module BestInPlace
       end
       if opts[:type] == :checkbox
         value = !!real_object.send(field)
-        if opts[:collection].blank? || opts[:collection].size != 2
+        if !opts[:collection].blank? && opts[:collection][0] == :actual_checkbox
+          opts[:collection] = ['<input type=checkbox></input>', '<input type=checkbox checked></input>']
+          opts[:sanitize] = false
+        elsif opts[:collection].blank? || opts[:collection].size != 2
           opts[:collection] = ["No", "Yes"]
         end
         display_value = value ? opts[:collection][1] : opts[:collection][0]
@@ -55,7 +58,12 @@ module BestInPlace
       out << " data-type='#{opts[:type]}'"
       out << " data-inner-class='#{opts[:inner_class]}'" if opts[:inner_class]
       out << " data-html-attrs='#{opts[:html_attrs].to_json}'" unless opts[:html_attrs].blank?
-      out << " data-original-content='#{attribute_escape(real_object.send(field))}'" if opts[:display_as] || opts[:display_with]
+      if opts[:display_content]
+        out << " data-original-content='#{opts[:display_content]}'"
+      elsif opts[:display_as] || opts[:display_with]
+        out << " data-original-content='#{attribute_escape(real_object.send(field))}'"
+      end
+      out << " data-mask='#{opts[:mask]}'" if opts[:mask]
       out << " data-value='#{attribute_escape(value)}'" if value
 
       if opts[:data] && opts[:data].is_a?(Hash)

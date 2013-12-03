@@ -329,6 +329,17 @@ describe BestInPlace::BestInPlaceHelpers do
         end
       end
 
+      describe "actual checkbox" do
+        before do
+          nk = Nokogiri::HTML.parse(helper.best_in_place @user, :receive_email, :type => :checkbox, :collection => [:actual_checkbox])
+          @span = nk.css('input')
+        end
+
+        it "should be an unchecked checkbox" do
+          @span.should have_selector('input', :type => 'checkbox')
+        end
+      end
+
     end
 
     context "with a select attribute" do

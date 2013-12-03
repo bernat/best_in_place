@@ -30,8 +30,9 @@ The editor works by PUTting the updated value to the server and GETting the upda
 - Autogrowing textarea
 - Helper for generating the best_in_place field only if a condition is satisfied
 - Provided test helpers to be used in your integration specs
-- Custom display methods using a method from your model or an existing rails
-  view helper
+- Custom display methods using a method from your model or an existing rails view helper
+- Input field masking compatible with maskedInput
+- Checkbox can display an actual HTML checkbox or images
 
 ##Usage of Rails 3 Gem
 
@@ -47,7 +48,8 @@ Options:
 
 - **:type** It can be only [:input, :textarea, :select, :checkbox, :date (>= 1.0.4)] or if undefined it defaults to :input.
 - **:collection**: In case you are using the :select type then you must specify the collection of values it takes. In case you are
-  using the :checkbox type you can specify the two values it can take, or otherwise they will default to Yes and No.
+  using the :checkbox type you can specify the two values it can take, or otherwise they will default to Yes and No.  Alternatively,
+  if you specify [:actual_checkbox] as your collection, an HTML checkbox will be displayed.
 - **:path**: URL to which the updating action will be sent. If not defined it defaults to the :object path.
 - **:nil**: The nil param defines the content displayed in case no value is defined for that field. It can be something like "click me to edit".
   If not defined it will show *"-"*.
@@ -121,6 +123,14 @@ The key can be a string or an integer.
 The first value is always the negative boolean value and the second the positive. Structure: `["false value", "true value"]`.
 If not defined, it will default to *Yes* and *No* options.
 
+Image tags can be used as the collection values:
+
+    <%= best_in_place @user, :receive_emails, :type => :checkbox, :collection => [image_tag('no.png'), image_tag('yes.png')] %>
+
+The collection can also specify a standard HTML checkbox:
+
+    <%= best_in_place @user, :receive_emails, :type => :checkbox, :collection => [:actual_checkbox] %>
+
 ### Date
 
     <%= best_in_place @user, :birth_date, :type => :date %>
@@ -192,9 +202,9 @@ The 'ajax:success' event is triggered upon success. Use bind:
 
     $('.best_in_place').bind("ajax:success", function () {$(this).closest('tr').effect('highlight'); });
 
-To bind a callback that is specific to a particular field, use the 'classes' option in the helper method and 
-then bind to that class. 
-    
+To bind a callback that is specific to a particular field, use the 'classes' option in the helper method and
+then bind to that class.
+
     <%= best_in_place @user, :name, :classes => 'highlight_on_success' %>
     <%= best_in_place @user, :mail, :classes => 'bounce_on_success' %>
 

@@ -19,10 +19,10 @@ Gem::Specification.new do |s|
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   s.require_paths = ["lib"]
 
-  s.add_dependency "rails", ">= 3.1"
+  s.add_dependency "rails", "~> 4"
   s.add_dependency "jquery-rails"
 
-  s.add_development_dependency "rspec-rails", "~> 2.8.0"
+  s.add_development_dependency "rspec-rails"
   s.add_development_dependency "nokogiri"
-  s.add_development_dependency "capybara", "~> 1.1.2"
+  s.add_development_dependency "capybara"
 end

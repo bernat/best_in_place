@@ -53,10 +53,12 @@ Options:
   If not defined it will show *"-"*.
 - **:activator**: Is the DOM object that can activate the field. If not defined the user will making editable by clicking on it.
 - **:ok_button**: (Inputs and textareas only) If set to a string, then an OK button will be shown with the string as its label, replacing save on blur.
+- **:ok_button_class**: (Inputs and textareas only) Specifies any extra classes to set on the OK button.
 - **:cancel_button**: (Inputs and textareas only) If set to a string, then a Cancel button will be shown with the string as its label.
+- **:cancel_button_class**: (Inputs and textareas only) Specifies any extra classes to set on the Cancel button.
 - **:sanitize**: True by default. If set to false the input/textarea will accept html tags.
 - **:html_attrs**: Hash of html arguments, such as maxlength, default-value etc.
-- **:inner_class**: Class that is set to the rendered form.
+- **:inner_class**: Class that is set to the rendered input.
 - **:display_as**: A model method which will be called in order to display
   this field.
 - **:object_name**: Used for overriding the default params key used for the object (the data-object attribute). Useful for e.g. STI scenarios where best_in_place should post to a common controller for different models.
@@ -109,7 +111,7 @@ Examples (code in the views):
 
     <%= best_in_place @user, :country, :type => :select, :collection => [[1, "Spain"], [2, "Italy"], [3, "Germany"], [4, "France"]] %>
 
-Of course it can take an instance or global variable for the collection, just remember the structure `[[key, value], [key, value],...]`.
+Of course it can take an instance, proc or global variable for the collection, just remember the structure `[[key, value], [key, value],...]`.
 The key can be a string or an integer.
 
 ### Checkbox
@@ -188,11 +190,11 @@ You can also pass in a proc or lambda like this:
 
 The 'ajax:success' event is triggered upon success. Use bind:
 
-    $('.best_in_place').bind("ajax:success", function(){$(this).closest('tr').effect('highlight'));});
+    $('.best_in_place').bind("ajax:success", function () {$(this).closest('tr').effect('highlight'); });
 
-To bind a callback that is specific to a particular field, use the 'classes' option in the helper method and 
-then bind to that class. 
-    
+To bind a callback that is specific to a particular field, use the 'classes' option in the helper method and
+then bind to that class.
+
     <%= best_in_place @user, :name, :classes => 'highlight_on_success' %>
     <%= best_in_place @user, :mail, :classes => 'bounce_on_success' %>
 

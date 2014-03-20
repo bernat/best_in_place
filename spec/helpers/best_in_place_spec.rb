@@ -75,8 +75,16 @@ describe BestInPlace::BestInPlaceHelpers do
         @span.attribute("data-ok-button").should be_nil
       end
 
+      it "should have no OK button class by default" do
+        @span.attribute("data-ok-button-class").should be_nil
+      end
+
       it "should have no Cancel button text by default" do
         @span.attribute("data-cancel-button").should be_nil
+      end
+
+      it "should have no Cancel button class by default" do
+        @span.attribute("data-cancel-button-class").should be_nil
       end
 
       it "should have no Use-Confirmation dialog option by default" do
@@ -158,11 +166,25 @@ describe BestInPlace::BestInPlaceHelpers do
         span.attribute("data-ok-button").value.should == "okay"
       end
 
+      it "should have the given OK button class" do
+        out = helper.best_in_place @user, :name, :ok_button => "okay", :ok_button_class => "okay-class"
+        nk = Nokogiri::HTML.parse(out)
+        span = nk.css("span")
+        span.attribute("data-ok-button-class").value.should == "okay-class"
+      end
+
       it "should have the given Cancel button text" do
         out = helper.best_in_place @user, :name, :cancel_button => "nasty"
         nk = Nokogiri::HTML.parse(out)
         span = nk.css("span")
         span.attribute("data-cancel-button").value.should == "nasty"
+      end
+
+      it "should have the given Cancel button class" do
+        out = helper.best_in_place @user, :name, :cancel_button => "nasty", :cancel_button_class => "nasty-class"
+        nk = Nokogiri::HTML.parse(out)
+        span = nk.css("span")
+        span.attribute("data-cancel-button-class").value.should == "nasty-class"
       end
 
       it "should have the given Use-Confirmation dialog option" do
@@ -336,6 +358,18 @@ describe BestInPlace::BestInPlaceHelpers do
         before do
           @apostrophe_countries = [[1, "Joe's Country"], [2, "Bob's Country"]]
           nk = Nokogiri::HTML.parse(helper.best_in_place @user, :country, :type => :select, :collection => @apostrophe_countries)
+          @span = nk.css("span")
+        end
+
+        it "should have a proper data collection" do
+          @span.attribute("data-collection").value.should == @apostrophe_countries.to_json
+        end
+      end
+
+      context "with an proc" do
+        before do
+          @proc_countries = Proc.new { [[1, "Proc Country"], [2, "Lambda Country"]] }
+          nk = Nokogiri::HTML.parse(helper.best_in_place @user, :country, :type => :select, :collection => @proc_countries)
           @span = nk.css("span")
         end
 

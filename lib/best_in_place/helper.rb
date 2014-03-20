@@ -21,8 +21,9 @@ module BestInPlace
       value = nil
       if opts[:type] == :select && !opts[:collection].blank?
         value = real_object.send(field)
-        display_value = Hash[opts[:collection]].stringify_keys[value.to_s]
-        collection = opts[:collection].to_json
+        actual_data = opts[:collection].respond_to?(:call) ? opts[:collection].call : opts[:collection].to_a
+        display_value = Hash[actual_data].stringify_keys[value.to_s]
+        collection = actual_data.to_json
       end
       if opts[:type] == :checkbox
         value = !!real_object.send(field)
@@ -47,7 +48,9 @@ module BestInPlace
       out << " data-attribute='#{field}'"
       out << " data-activator='#{opts[:activator]}'" unless opts[:activator].blank?
       out << " data-ok-button='#{opts[:ok_button]}'" unless opts[:ok_button].blank?
+      out << " data-ok-button-class='#{opts[:ok_button_class]}'" unless opts[:ok_button_class].blank?
       out << " data-cancel-button='#{opts[:cancel_button]}'" unless opts[:cancel_button].blank?
+      out << " data-cancel-button-class='#{opts[:cancel_button_class]}'" unless opts[:cancel_button_class].blank?
       out << " data-nil='#{attribute_escape(opts[:nil])}'" unless opts[:nil].blank?
       out << " data-use-confirm='#{opts[:use_confirm]}'" unless opts[:use_confirm].nil?
       out << " data-type='#{opts[:type]}'"
@@ -86,11 +89,12 @@ module BestInPlace
     def build_value_for(object, field, opts)
       return "" if object.send(field).blank?
 
-      if (object.respond_to?(:id))
-        klass = "#{object.class}_#{object.id}"
+      klass = if object.respond_to?(:id)
+        "#{object.class}_#{object.id}"
       else
-        klass = object.class.to_s
+        object.class.to_s
       end
+
       if opts[:display_as]
         BestInPlace::DisplayMethods.add_model_method(klass, field, opts[:display_as])
         object.send(opts[:display_as]).to_s
@@ -98,6 +102,7 @@ module BestInPlace
       elsif opts[:display_with].try(:is_a?, Proc)
         BestInPlace::DisplayMethods.add_helper_proc(klass, field, opts[:display_with])
         opts[:display_with].call(object.send(field))
+
       elsif opts[:display_with]
         BestInPlace::DisplayMethods.add_helper_method(klass, field, opts[:display_with], opts[:helper_options])
         if opts[:helper_options]
@@ -107,7 +112,7 @@ module BestInPlace
         end
 
       else
-        object.send(field).to_s.presence || ""
+        object.send(field).to_s
       end
     end
 

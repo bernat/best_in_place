@@ -17,7 +17,7 @@ module BestInPlace
       if renderer = BestInPlace::DisplayMethods.lookup(klass, updating_attr)
         render :json => renderer.render_json(obj)
       else
-        head :ok
+        head :no_content
       end
     end
 

@@ -21,8 +21,9 @@ module BestInPlace
       value = nil
       if opts[:type] == :select && !opts[:collection].blank?
         value = real_object.send(field)
-        display_value = Hash[opts[:collection]].stringify_keys[value.to_s]
-        collection = opts[:collection].to_json
+        actual_data = opts[:collection].respond_to?(:call) ? opts[:collection].call : opts[:collection].to_a
+        display_value = Hash[actual_data].stringify_keys[value.to_s]
+        collection = actual_data.to_json
       end
       if opts[:type] == :checkbox
         value = !!real_object.send(field)

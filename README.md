@@ -111,7 +111,7 @@ Examples (code in the views):
 
     <%= best_in_place @user, :country, :type => :select, :collection => [[1, "Spain"], [2, "Italy"], [3, "Germany"], [4, "France"]] %>
 
-Of course it can take an instance or global variable for the collection, just remember the structure `[[key, value], [key, value],...]`.
+Of course it can take an instance, proc or global variable for the collection, just remember the structure `[[key, value], [key, value],...]`.
 The key can be a string or an integer.
 
 ### Checkbox
@@ -192,9 +192,9 @@ The 'ajax:success' event is triggered upon success. Use bind:
 
     $('.best_in_place').bind("ajax:success", function () {$(this).closest('tr').effect('highlight'); });
 
-To bind a callback that is specific to a particular field, use the 'classes' option in the helper method and 
-then bind to that class. 
-    
+To bind a callback that is specific to a particular field, use the 'classes' option in the helper method and
+then bind to that class.
+
     <%= best_in_place @user, :name, :classes => 'highlight_on_success' %>
     <%= best_in_place @user, :mail, :classes => 'bounce_on_success' %>
 

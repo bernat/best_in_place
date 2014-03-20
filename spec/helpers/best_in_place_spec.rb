@@ -365,6 +365,18 @@ describe BestInPlace::BestInPlaceHelpers do
           @span.attribute("data-collection").value.should == @apostrophe_countries.to_json
         end
       end
+
+      context "with an proc" do
+        before do
+          @proc_countries = Proc.new { [[1, "Proc Country"], [2, "Lambda Country"]] }
+          nk = Nokogiri::HTML.parse(helper.best_in_place @user, :country, :type => :select, :collection => @proc_countries)
+          @span = nk.css("span")
+        end
+
+        it "should have a proper data collection" do
+          @span.attribute("data-collection").value.should == @apostrophe_countries.to_json
+        end
+      end
     end
   end
 

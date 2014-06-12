@@ -286,7 +286,7 @@ describe BestInPlace::BestInPlaceHelpers, type: :helper do
         end
 
         it "should have a #{type} data-type" do
-          @span.attribute("data-type").value.should == type
+          expect(@span.attribute("data-type").value).to eq(type)
         end
       end
     end

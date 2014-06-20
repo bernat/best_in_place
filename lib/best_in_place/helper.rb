@@ -57,7 +57,7 @@ module BestInPlace
       out << " data-html-attrs='#{opts[:html_attrs].to_json}'" unless opts[:html_attrs].blank?
       out << " data-original-content='#{best_in_place_attribute_escape(real_object.send(field))}'" if opts[:display_as] || opts[:display_with]
       out << " data-value='#{best_in_place_attribute_escape(value)}'" if value
-      out << " data-object-attributes='#{real_object.as_json.to_param}'" if real_object.new_record?
+      out << " data-object-attributes='#{real_object.to_json}'" if real_object.new_record?
 
       if opts[:data] && opts[:data].is_a?(Hash)
         opts[:data].each do |k, v|

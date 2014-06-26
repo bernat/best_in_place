@@ -92,8 +92,6 @@ module BestInPlace
     private
 
     def best_in_place_build_value_for(object, field, opts)
-      return "" if object.send(field).blank?
-
       klass = if object.respond_to?(:id)
                 "#{object.class}_#{object.id}"
               else
@@ -113,7 +111,13 @@ module BestInPlace
         if opts[:helper_options]
           BestInPlace::ViewHelpers.send(opts[:display_with], object.send(field), opts[:helper_options])
         else
-          BestInPlace::ViewHelpers.send(opts[:display_with], object.send(field))
+          field_value = object.send(field)
+
+          if field_value.blank?
+            ''
+          else
+            BestInPlace::ViewHelpers.send(opts[:display_with], field_value)
+          end
         end
 
       else

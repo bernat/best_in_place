@@ -704,6 +704,18 @@ describe "JS behaviour", :js => true do
       end
     end
 
+    it "should show the new value using the helper after a successful update if original value is nil" do
+      @user.money = nil
+      @user.save!
+      visit user_path(@user)
+
+      bip_text @user, :money, "240"
+
+      within("#money") do
+        expect(page).to have_content("$240.00")
+      end
+    end
+
     it "should display the original content when editing the form" do
       @user.save!
       retry_on_timeout do

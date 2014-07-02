@@ -276,6 +276,21 @@ describe BestInPlace::BestInPlaceHelpers, type: :helper do
       end
     end
 
+    %w(color date datetime datetime-local email
+      month number range search tel time url week).each do |type|
+
+      context "with html5 input types" do
+        before do
+          nk = Nokogiri::HTML.parse(helper.best_in_place @user, :name, type: type)
+          @span = nk.css("span")
+        end
+
+        it "should have a #{type} data-type" do
+          expect(@span.attribute("data-type").value).to eq(type)
+        end
+      end
+    end
+
     context "with a date attribute" do
       before do
         nk = Nokogiri::HTML.parse(helper.best_in_place @user, :birth_date, :type => :date)

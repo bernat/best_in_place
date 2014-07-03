@@ -19,6 +19,11 @@ module BestInPlace
 
       collection = nil
       value = nil
+      if opts[:type] == :multiselect  && !opts[:collection].blank?
+        value = real_object.send(field)
+        display_value = value && !value.blank? ? value.join(',') : ''
+        collection = opts[:collection].to_json
+      end
       if opts[:type] == :select && !opts[:collection].blank?
         value = real_object.send(field)
         display_value = Hash[opts[:collection]].stringify_keys[value.to_s]

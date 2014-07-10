@@ -6,8 +6,8 @@
 ##Description
 
 **Best in Place** is a jQuery based AJAX Inplace-Editor that takes profit of RESTful server-side controllers to allow users to edit stuff with
-no need of forms. If the server have standard defined REST methods, particularly those to UPDATE your objects (HTTP PUT), then by adding the
-Javascript file to the application it is making all the fields with the proper defined classes to become user in-place editable.
+no need of forms. If the server has standard defined REST methods, particularly those to UPDATE your objects (HTTP PUT), then by adding the
+Javascript file to the application it allows all the fields with the proper defined classes to become user in-place editable.
 
 The editor works by PUTting the updated value to the server and GETting the updated record afterwards to display the updated value.
 

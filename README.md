@@ -133,6 +133,12 @@ prepare a `$.datepicker.setDefaults` call with the preferences of your choice.
 More information about datepicker and setting defaults can be found
 [here](http://docs.jquery.com/UI/Datepicker/$.datepicker.setDefaults)
 
+### Datetime
+
+    <%= best_in_place @user, :birth_date, :type => :datetime %>
+
+With the :datetime type the input field will be initialized as a datetimepicker input.
+
 ## Controller response with respond_with_bip
 
 Best in place provides a utility method you should use in your controller in

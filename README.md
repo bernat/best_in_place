@@ -292,7 +292,7 @@ And this is how it is done!
 Installing *best_in_place* is very easy and straight-forward.
 Just begin including the gem in your Gemfile:
 
-    gem "best_in_place"
+    gem "best_in_place",  github: 'bernat/best_in_place'
 
 After that, specify the use of the jquery and best in place
 javascripts in your application.js, and optionally specify jquery-ui if

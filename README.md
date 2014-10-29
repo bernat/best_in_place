@@ -80,7 +80,7 @@ Options:
 - **:collection**: If you are using the :select type then you must specify the collection of values it takes as a hash where keys represent the display text and values are the option's value when selected. If you are
   using the :checkbox type you can specify the two values it can take, or otherwise they will default to Yes and No.
 - **:url**: URL to which the updating action will be sent. If not defined it defaults to the :object path.
-- **:place_holder**: The nil param defines the content displayed in case no value is defined for that field. It can be something like "click me to edit".
+- **:place_holder**: The place_holder param defines the content displayed in case no value is defined for that field. It can be something like "click me to edit".
   If not defined it will show *"-"*.
 - **:activator**: Is the DOM object that can activate the field. If not defined the user will making editable by clicking on it.
 - **:ok_button**: (Inputs and textareas only) If set to a string, then an OK button will be shown with the string as its label, replacing save on blur.
@@ -131,7 +131,7 @@ Examples (code in the views):
 
     <%= best_in_place @user, :name, :type => :input %>
 
-    <%= best_in_place @user, :name, :type => :input, :nil => "Click me to add content!" %>
+    <%= best_in_place @user, :name, :type => :input, :place_holder => "Click me to add content!" %>
 
 ### Textarea
 
@@ -224,11 +224,11 @@ The 'ajax:success' event is triggered upon success. Use bind:
 
     $('.best_in_place').bind("ajax:success", function () {$(this).closest('tr').effect('highlight'); });
 
-To bind a callback that is specific to a particular field, use the 'classes' option in the helper method and
+To bind a callback that is specific to a particular field, use the 'class' option in the helper method and
 then bind to that class.
 
-    <%= best_in_place @user, :name, :classes => 'highlight_on_success' %>
-    <%= best_in_place @user, :mail, :classes => 'bounce_on_success' %>
+    <%= best_in_place @user, :name, :class => 'highlight_on_success' %>
+    <%= best_in_place @user, :mail, :class => 'bounce_on_success' %>
 
     $('.highlight_on_success').bind("ajax:success", function(){$(this).closest('tr').effect('highlight'));});
     $('.bounce_on_success').bind("ajax:success", function(){$(this).closest('tr').effect('bounce'));});

@@ -237,11 +237,11 @@ The 'ajax:success' event is triggered upon success. Use bind:
 
     $('.best_in_place').bind("ajax:success", function () {$(this).closest('tr').effect('highlight'); });
 
-To bind a callback that is specific to a particular field, use the 'classes' option in the helper method and
+To bind a callback that is specific to a particular field, use the 'class' option in the helper method and
 then bind to that class.
 
-    <%= best_in_place @user, :name, :classes => 'highlight_on_success' %>
-    <%= best_in_place @user, :mail, :classes => 'bounce_on_success' %>
+    <%= best_in_place @user, :name, :class => 'highlight_on_success' %>
+    <%= best_in_place @user, :mail, :class => 'bounce_on_success' %>
 
     $('.highlight_on_success').bind("ajax:success", function(){$(this).closest('tr').effect('highlight');});
     $('.bounce_on_success').bind("ajax:success", function(){$(this).closest('tr').effect('bounce');});

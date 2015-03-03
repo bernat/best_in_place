@@ -100,6 +100,17 @@ Options:
 - **:confirm**: If set to true displays a confirmation message when abandoning changes (pressing the escape key).
 - **:skip_blur**: If set to true, blurring the input will not cause changes to be abandoned in textareas.
 
+JS Options:
+
+You can overwrite BestInPlaceEditor default settings like this:
+
+    $(document).ready(function() {
+      /* Activating Best In Place */
+      jQuery(".best_in_place").best_in_place({
+        eventType: 'dblclick'
+      });
+    });
+
 HTML Options:
 
 If you provide an option that is not explicitly a best_in_place option it will be passed through when creating the best_in_place span.

@@ -237,9 +237,7 @@ describe "JS behaviour", :js => true do
     bip_select @user, :country, "Italy"
 
     visit user_path(@user)
-    within("#country") do
-      expect(page).to have_content("Italy")
-    end
+    expect(find("#country")).to have_content("Italy")
   end
 
   it "should apply the inner_class option to a select field" do

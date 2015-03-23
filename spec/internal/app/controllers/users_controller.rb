@@ -27,6 +27,14 @@ class UsersController < ApplicationController
     render :action => :email_field, :layout => false
   end
 
+  def event_type
+    @user = User.find(params[:id])
+    @event_type = 'dblclick'
+    @countries = COUNTRIES_HASH
+
+    render :show
+  end
+
   def show_ajax
     @user = User.find(params[:id])
     @countries = COUNTRIES_HASH

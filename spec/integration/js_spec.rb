@@ -155,6 +155,19 @@ describe "JS behaviour", :js => true do
     expect(find('#email')).to have_content('new@email.com')
   end
 
+  it "should be able to use bip_text with double click event type to update a text field" do
+    @user.save!
+    visit event_type_user_path(@user)
+    expect(find('#email')).to have_content('lucianapoli@gmail.com')
+
+    bip_text @user, :email, "new@email.com", 'dblclick'
+
+    expect(find('#email')).to have_content('new@email.com')
+
+    visit user_path(@user)
+    expect(find('#email')).to have_content('new@email.com')
+  end
+
   it "should be able to update a field two consecutive times" do
     @user.save!
     visit user_path(@user)

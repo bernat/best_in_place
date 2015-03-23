@@ -12,9 +12,9 @@ module BestInPlace
       wait_for_ajax
     end
 
-    def bip_text(model, attr, new_value)
+    def bip_text(model, attr, new_value, event_type = 'click')
       id = BestInPlace::Utils.build_best_in_place_id model, attr
-      find("##{id}").click
+      find("##{id}").trigger(event_type)
       execute_script <<-JS
         $("##{id} input[name='#{attr}']").val('#{escape_javascript new_value.to_s}');
         $("##{id} form").submit();

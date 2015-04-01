@@ -31,7 +31,8 @@ module BestInPlace
       end
 
       options[:class] = ['best_in_place'] + Array(opts[:class] || opts[:classes])
-      options[:id] = opts[:id] || BestInPlace::Utils.build_best_in_place_id(real_object, field)
+      options[:data]['id_appendix'] = opts[:id_appendix].presence
+      options[:id] = opts[:id] || BestInPlace::Utils.build_best_in_place_id(real_object, field, options[:data]['id_appendix'])
 
       pass_through_html_options(opts, options)
 
@@ -85,7 +86,7 @@ module BestInPlace
                     :activator, :cancel_button, :cancel_button_class, :html_attrs, :inner_class, :nil,
                     :object_name, :ok_button, :ok_button_class, :display_as, :display_with, :path, :value,
                     :use_confirm, :confirm, :sanitize, :raw, :helper_options, :url, :place_holder, :class,
-                    :as, :param, :container]
+                    :as, :param, :container, :id_appendix]
       uknown_keys = opts.keys - known_keys
       uknown_keys.each { |key| options[key] = opts[key] }
     end

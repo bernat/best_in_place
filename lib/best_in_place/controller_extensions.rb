@@ -11,7 +11,7 @@ module BestInPlace
 
       updating_attr = params[param_key].keys.first
 
-      if renderer = BestInPlace::DisplayMethods.lookup(obj.class, updating_attr)
+      if renderer = BestInPlace::DisplayMethods.lookup(obj.class, obj.id, updating_attr)
         render json: renderer.render_json(obj)
       else
         head :no_content

@@ -309,6 +309,25 @@ describe BestInPlace::Helper, type: :helper do
       end
     end
 
+    context "with a time attribute" do
+      before do
+        nk = Nokogiri::HTML.parse(helper.best_in_place @user, :birth_date, as: :time)
+        @span = nk.css("span")
+      end
+
+      it "should render the time as text" do
+        expect(@span.text).to eq(@user.birth_date.to_date.to_s)
+      end
+
+      it "should have a time data-bip-type" do
+        expect(@span.attribute("data-bip-type").value).to eq("time")
+      end
+
+      it "should have no data-bip-collection" do
+        expect(@span.attribute("data-bip-collection")).to be_nil
+      end
+    end
+
     context "with a boolean attribute" do
       before do
         nk = Nokogiri::HTML.parse(helper.best_in_place @user, :receive_email, as: :checkbox)

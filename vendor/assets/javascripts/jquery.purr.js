@@ -53,7 +53,7 @@
       // Set up the close button
       var close = document.createElement('a');
       jQuery(close).attr({
-          class: 'close',
+          'class': 'close',
           href: '#close'
           }).appendTo(notice).click(function() {
               removeNotice();

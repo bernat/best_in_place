@@ -45,7 +45,7 @@ module BestInPlace
       options[:data]['bip-cancel-button'] = opts[:cancel_button].presence
       options[:data]['bip-cancel-button-class'] = opts[:cancel_button_class].presence
       options[:data]['bip-original-content'] = html_escape(opts[:value] || value).presence
-      options[:data]['bip-original-content'] = options[:data]['bip-original-content'].to_time(:utc).strftime("%H:%M") if opts[:as] == :time
+      options[:data]['bip-original-content'] = options[:data]['bip-original-content'].try(:to_time, :utc).try(:strftime, "%H:%M") if opts[:as] == :time
 
       options[:data]['bip-skip-blur'] = opts.has_key?(:skip_blur) ? opts[:skip_blur].presence : BestInPlace.skip_blur
 

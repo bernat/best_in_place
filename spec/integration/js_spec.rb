@@ -74,6 +74,7 @@ describe "JS behaviour", :js => true do
       visit user_path(@user)
 
       expect(find('#favorite_color')).to have_xpath("//span[@class='placeholder']")
+      expect(find('#favorite_color')).to have_css('.placeholdered')
     end
 
     it 'should render html content for placeholder option after edit' do
@@ -84,6 +85,17 @@ describe "JS behaviour", :js => true do
       bip_text @user, :favorite_color, ""
 
       expect(find('#favorite_color')).to have_css('span.placeholder')
+      expect(find('#favorite_color')).to have_css('.placeholdered')
+    end
+
+    it 'should remove the placeholdered class after adding a value' do
+      @user.favorite_color = ""
+      @user.save!
+      visit user_path(@user)
+      expect(find('#favorite_color')).to have_css('.placeholdered')
+
+      bip_text @user, :favorite_color, "blue"
+      expect(find('#favorite_color')).to_not have_css('.placeholdered')
     end
 
     it "should display an empty input field the second time I open it" do

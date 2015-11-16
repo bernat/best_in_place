@@ -153,6 +153,7 @@ module BestInPlace
 
     def best_in_place_collection_builder(type, collection)
       return Array(collection) if collection.is_a?(Hash)
+      return Array(Hash[collection.map {|v| [v.to_s, v.to_s.upcase]}]) if collection.is_a?(Array)
 
       if type == :checkbox
         best_in_place_collection_checkbox(collection)

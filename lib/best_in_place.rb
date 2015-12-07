@@ -14,11 +14,12 @@ module BestInPlace
   end
 
   class Configuration
-    attr_accessor :container, :skip_blur
+    attr_accessor :container, :skip_blur, :default_max_execution_time_in_seconds
 
     def initialize
       @container = :span
       @skip_blur = false
+      @default_max_execution_time_in_seconds = 30
     end
   end
 

@@ -213,6 +213,33 @@ describe "JS behaviour", :js => true do
     expect(find('#country')).to have_content('France')
   end
 
+  it "should be able to use bip_multi_select to render and update a multi-select field" do
+    @user.favorite_snacks = %w(whoppers sun-chips)
+    @user.save!
+    visit user_path(@user)
+
+    expect(find('#favorite_snacks')).to have_content('Whoppers,Sun Chips')
+
+    bip_multi_select @user, :favorite_snacks, ['Twizzlers','Kettle Corn'], ['Sun Chips']
+
+    expect(find('#favorite_snacks')).to have_content('Twizzlers,Whoppers,Kettle Corn')
+    expect(find('#favorite_snacks')).not_to have_content('Sun Chips')
+    visit user_path(@user)
+
+    expect(find('#favorite_snacks')).to have_content('Twizzlers,Whoppers,Kettle Corn')
+  end
+
+  it "does not error when value is nil" do
+    @user.save!
+    visit user_path(@user)
+    expect(find('#favorite_snacks')).to have_content('-')
+
+    bip_multi_select @user, :favorite_snacks, ['Sun Chips']
+    expect(find('#favorite_snacks')).to have_content('Sun Chips')
+    visit user_path(@user)
+    expect(find('#favorite_snacks')).to have_content('Sun Chips')
+  end
+
   it "should apply the inner_class option to a select field" do
     @user.save!
     visit user_path(@user)

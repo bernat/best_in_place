@@ -138,6 +138,12 @@
       </td>
     </tr>
     <tr>
+      <td>Favorite snacks</td>
+      <td id="favorite_snacks">
+        <%= best_in_place @user, :favorite_snacks, as: :select, multiple: true, collection: snacks_options %>
+      </td>
+    </tr>
+    <tr>
       <td>Zero Field</td>
       <td id="zero_field">
         <%= best_in_place @user, :zero_field, place_holder: 0 %>

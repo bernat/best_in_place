@@ -21,6 +21,8 @@ class User < ActiveRecord::Base
   alias_attribute :receive_email_image, :receive_email
   alias_attribute :description_simple, :description
 
+  serialize :favorite_snacks
+
   def address_format
     "<b>addr => [#{address}]</b>".html_safe
   end
@@ -32,4 +34,5 @@ class User < ActiveRecord::Base
   def zip_format
     nil
   end
+
 end

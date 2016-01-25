@@ -19,10 +19,14 @@ module BestInPlace
 
       if opts[:collection] or type == :checkbox
         collection = opts[:collection]
-        value = value.to_s
         collection = best_in_place_default_collection if collection.blank?
         collection = best_in_place_collection_builder(type, collection)
-        display_value = collection.flat_map{|a| a[0].to_s == value ? a[1] : nil }.compact[0]
+        if value.is_a? Array
+            display_value = collection.flat_map{|a| value.include?(a[0].to_s) ? a[1] : nil }.compact.join(',')
+        else
+            value = value.to_s
+            display_value = collection.flat_map{|a| a[0].to_s == value ? a[1] : nil }.compact[0]
+        end
         collection = collection.to_json
         options[:data]['bip-collection'] = html_escape(collection)
       end
@@ -53,6 +57,8 @@ module BestInPlace
       options[:data]['bip-confirm'] = opts[:confirm].presence
       options[:data]['bip-value'] = html_escape(value).presence
 
+      options[:data]['bip-select-multiple'] = opts[:multiple].presence
+
       if opts[:raw]
         options[:data]['bip-raw'] = 'true'
       end
@@ -82,7 +88,7 @@ module BestInPlace
                     :activator, :cancel_button, :cancel_button_class, :html_attrs, :inner_class, :nil,
                     :object_name, :ok_button, :ok_button_class, :display_as, :display_with, :path, :value,
                     :use_confirm, :confirm, :sanitize, :raw, :helper_options, :url, :place_holder, :class,
-                    :as, :param, :container]
+                    :as, :param, :container, :multiple]
       uknown_keys = opts.keys - known_keys
       uknown_keys.each { |key| options[key] = opts[key] }
     end

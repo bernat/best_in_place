@@ -12,8 +12,12 @@ Capybara.javascript_driver = :poltergeist
 
 require 'best_in_place'
 
-Combustion.initialize! :active_record, :action_controller,
-                       :action_view, :sprockets
+Combustion.initialize! :active_record, :action_controller, :action_view, :sprockets do
+  config.assets.compile = true
+  config.assets.compress = false
+  config.assets.debug = false
+  config.assets.digest = false
+end
 
 require 'rspec/rails'
 require 'capybara/rails'

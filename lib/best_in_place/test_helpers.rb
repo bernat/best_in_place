@@ -35,6 +35,19 @@ module BestInPlace
       wait_for_ajax
     end
 
+    def bip_multi_select(model, attr, opts, unselect=[])
+      id = BestInPlace::Utils.build_best_in_place_id model, attr
+      find("##{id}").trigger('click')
+      opts.each do |opt|
+          find("##{id}").select(opt)
+      end
+      unselect.each do |opt|
+          find("##{id}").unselect(opt)
+      end
+      find("##{id} input[type=submit]").trigger('click')
+      wait_for_ajax
+    end
+
     def wait_for_ajax
       return unless respond_to?(:evaluate_script)
       wait_until { finished_all_ajax_requests? }

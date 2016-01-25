@@ -26,4 +26,8 @@ module UsersHelper
   def bb(value)
     "#{value} €"
   end
+
+  def snacks_options
+      Hash[ ["Twizzlers", "Whoppers", "Krispy Kremes", "Sun Chips", "Kit Kat", "Kettle Corn"].map { |o| [o.downcase.gsub(/\s+/, '-'), o] } ]
+  end
 end

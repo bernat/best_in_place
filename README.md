@@ -77,6 +77,8 @@ Options:
 - **:as** It can be only [:input, :textarea, :select, :checkbox, :date] or if undefined it defaults to :input.
 - **:collection**: If you are using the :select type then you must specify the collection of values it takes as a hash where values represent the display text and keys are the option's value when selected. If you are using the :checkbox type you can specify the two values it can take, or otherwise they will default to Yes and No.
 - **:url**: URL to which the updating action will be sent. If not defined it defaults to the :object path.
+- **:method**: HTTP method used to submit the updating action. If not defined it defaults to :put.
+- **:other_fields**: Hash of additional data fields to submit along with the updating action.
 - **:place_holder**: The nil param defines the content displayed in case no value is defined for that field. It can be something like "click me to edit".
   If not defined it will show *"-"*.
 - **:activator**: Is the DOM object that can activate the field. If not defined the user will making editable by clicking on it.
@@ -166,7 +168,7 @@ The value will always be converted to a string for display.
 If you use array as a collection, the first value is always the negative boolean value and the second the positive. Structure: `["false value", "true value"]`.
 If not defined, it will default to *Yes* and *No* options.
 Default true and false values are stored in locales
- 
+
     t(:'best_in_place.yes', default: 'Yes')
     t(:'best_in_place.no', default: 'No')
 
@@ -340,7 +342,7 @@ You can configure some global options for best_in_place. Currently these options
       config.container = :div
       config.skip_blur = true
     end
-    
+
 
 ## Notification
 

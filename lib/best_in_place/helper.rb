@@ -31,7 +31,6 @@ module BestInPlace
       options[:id] = opts[:id] || BestInPlace::Utils.build_best_in_place_id(real_object, field)
 
       pass_through_html_options(opts, options)
-
       options[:data]['bip-activator'] = opts[:activator].presence
 
       options[:data]['bip-html-attrs'] = opts[:html_attrs].to_json unless opts[:html_attrs].blank?
@@ -49,9 +48,11 @@ module BestInPlace
       options[:data]['bip-skip-blur'] = opts.has_key?(:skip_blur) ? opts[:skip_blur].presence : BestInPlace.skip_blur
 
       options[:data]['bip-url'] = url_for(opts[:url] || object)
+      options[:data]['bip-method'] = opts[:method].presence
 
       options[:data]['bip-confirm'] = opts[:confirm].presence
       options[:data]['bip-value'] = html_escape(value).presence
+      options[:data]['bip-other-fields'] = opts[:other_fields].to_query unless opts[:other_fields].blank?
 
       if opts[:raw]
         options[:data]['bip-raw'] = 'true'

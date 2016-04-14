@@ -44,7 +44,7 @@ module BestInPlace
       evaluate_script('!window.jQuery') || evaluate_script('jQuery.active').zero?
     end
 
-    def wait_until(max_execution_time_in_seconds = Capybara.default_wait_time)
+    def wait_until(max_execution_time_in_seconds = Capybara.default_max_wait_time)
       Timeout.timeout(max_execution_time_in_seconds) do
         loop do
           if yield

@@ -64,6 +64,8 @@ You are done!
 
 ##Usage of Rails 3 Gem
 
+Please note: If you are using Rails 4, you will need to use the branch called rails-4.
+
 ###best_in_place
 **best_in_place object, field, OPTIONS**
 

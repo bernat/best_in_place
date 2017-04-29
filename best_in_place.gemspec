@@ -25,6 +25,7 @@ DESC
   s.require_paths = ["lib"]
 
   s.add_runtime_dependency 'actionpack', '>= 3.2'
+  s.add_runtime_dependency 'rails_autosize_jquery', '3.0.15'
   s.add_runtime_dependency 'railties', '>= 3.2'
 
 end

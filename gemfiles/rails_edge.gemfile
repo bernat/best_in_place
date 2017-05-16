@@ -16,11 +16,11 @@ gem "poltergeist"
 gem "sqlite3"
 gem "appraisal"
 gem "launchy"
-gem "rails", :github => "rails/rails"
-gem "arel", :github => "rails/arel"
+gem "rails", github: "rails/rails"
+gem "arel", github: "rails/arel"
 
 platforms :mri_21 do
   gem "byebug"
 end
 
-gemspec :path => "../"
+gemspec path: "../"

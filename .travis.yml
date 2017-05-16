@@ -2,10 +2,9 @@ language: ruby
 sudo: false
 cache: bundler
 rvm:
-  - 2.1
-  - 1.9.3
-  - 2.2
-  - rbx-2
+  - 2.4.1
+  - 2.3.3
+  - 2.2.7
 
 env: "RAILS_ENV=test DISPLAY=:99.0"
 gemfile:

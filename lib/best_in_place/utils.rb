@@ -1,7 +1,7 @@
 module BestInPlace
   module Utils #:nodoc:
     module_function
-    def build_best_in_place_id(object, field)
+    def build_best_in_place_id(object, field, appendix = nil)
       case object
         when Symbol, String
           "best_in_place_#{object}_#{field}"
@@ -9,6 +9,7 @@ module BestInPlace
           id = "best_in_place_#{object_to_key(object)}"
           id << "_#{object.id}" if object.persisted?
           id << "_#{field}"
+          id << "_#{appendix}" if !appendix.nil?
           id
       end
     end

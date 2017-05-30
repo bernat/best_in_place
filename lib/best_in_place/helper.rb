@@ -86,7 +86,7 @@ module BestInPlace
     def pass_through_html_options(opts, options)
       known_keys = [:id, :type, :nil, :classes, :collection, :data,
                     :activator, :cancel_button, :cancel_button_class, :html_attrs, :inner_class, :nil,
-                    :object_name, :ok_button, :ok_button_class, :display_as, :display_with, :path, :value,
+                    :object_name, :ok_button, :ok_button_class, :display_as, :display_with, :display_with_unique, :path, :value,
                     :use_confirm, :confirm, :sanitize, :raw, :helper_options, :url, :place_holder, :class,
                     :as, :param, :container]
       uknown_keys = opts.keys - known_keys
@@ -98,6 +98,10 @@ module BestInPlace
       if opts[:display_as]
         BestInPlace::DisplayMethods.add_model_method(klass, field, opts[:display_as])
         object.send(opts[:display_as]).to_s
+
+      elsif opts[:display_with_unique].try(:is_a?, Proc)
+        BestInPlace::DisplayMethods.add_helper_proc(klass, field, opts[:display_with_unique], id: object.id)
+        opts[:display_with_unique].call(object.send(field))
 
       elsif opts[:display_with].try(:is_a?, Proc)
         BestInPlace::DisplayMethods.add_helper_proc(klass, field, opts[:display_with])

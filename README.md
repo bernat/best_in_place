@@ -20,7 +20,7 @@ The editor works by PUTting the updated value to the server and GETting the upda
 Installing *best_in_place* is very easy and straight-forward.
 Just begin including the gem in your Gemfile:
 
-    gem 'best_in_place', '~> 3.0.1'
+    gem 'best_in_place', '~> 3.1.1'
 
 After that, specify the use of the jquery and best in place
 javascripts in your application.js, and optionally specify jquery-ui if

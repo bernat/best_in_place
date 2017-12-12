@@ -32,6 +32,8 @@ module BestInPlace
 
       pass_through_html_options(opts, options)
 
+      options[:data]['bip-ajax-data-type'] = opts[:ajax_data_type].presence
+
       options[:data]['bip-activator'] = opts[:activator].presence
 
       options[:data]['bip-html-attrs'] = opts[:html_attrs].to_json unless opts[:html_attrs].blank?
@@ -85,7 +87,7 @@ module BestInPlace
 
     def pass_through_html_options(opts, options)
       known_keys = [:id, :type, :nil, :classes, :collection, :data,
-                    :activator, :cancel_button, :cancel_button_class, :html_attrs, :inner_class, :nil,
+                    :activator, :ajax_data_type, :cancel_button, :cancel_button_class, :html_attrs, :inner_class, :nil,
                     :object_name, :ok_button, :ok_button_class, :display_as, :display_with, :path, :value,
                     :use_confirm, :confirm, :sanitize, :raw, :helper_options, :url, :place_holder, :class,
                     :as, :param, :container]

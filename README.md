@@ -29,6 +29,7 @@ you want to use jQuery UI datepickers:
     //= require jquery
     //= require best_in_place
 
+    // below lines are required if you plan to use `as: :date`
     //= require jquery-ui
     //= require best_in_place.jquery-ui
 
@@ -74,7 +75,7 @@ Params:
 
 Options:
 
-- **:as** It can be only [:input, :textarea, :select, :checkbox, :date] or if undefined it defaults to :input.
+- **:as** It can be only [:input, :textarea, :select, :checkbox, :date] or if undefined it defaults to :input. Note that if you choose `:date` you must also require `best_in_place.jquery-ui` - see the installation instructions above.
 - **:collection**: If you are using the :select type then you must specify the collection of values it takes as a hash where values represent the display text and keys are the option's value when selected. If you are using the :checkbox type you can specify the two values it can take, or otherwise they will default to Yes and No.
 - **:url**: URL to which the updating action will be sent. If not defined it defaults to the :object path.
 - **:place_holder**: The nil param defines the content displayed in case no value is defined for that field. It can be something like "click me to edit".

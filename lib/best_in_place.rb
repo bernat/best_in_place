@@ -31,3 +31,6 @@ require 'best_in_place/helper'
 require 'best_in_place/railtie'
 require 'best_in_place/controller_extensions'
 require 'best_in_place/display_methods'
+
+ActionView::Base.send(:include, BestInPlace::Helper)
+ActionController::Base.send(:include, BestInPlace::ControllerExtensions)

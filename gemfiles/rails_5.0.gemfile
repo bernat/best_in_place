@@ -12,7 +12,7 @@ gem "nokogiri"
 gem "combustion"
 gem "sprockets-rails"
 gem "capybara"
-gem "poltergeist"
+gem 'selenium-webdriver'
 gem "sqlite3"
 gem "appraisal"
 gem "launchy"

@@ -463,6 +463,15 @@ The parameters are defined here (some are method-specific):
 * **new_value** (only **bip_area** and **bip_text**): the new value with which to fill the BIP field.
 * **name** (only **bip_select**): the name to select from the dropdown selector.
 
+In order to use the helpers you need to add the following lines to your `spec_helper.rb` file:
+
+    require 'best_in_place'
+    require 'best_in_place/test_helpers'
+
+and
+
+    config.include BestInPlace::TestHelpers
+
 ---
 
 ## Authors, License and Stuff

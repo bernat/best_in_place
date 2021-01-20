@@ -49,6 +49,7 @@ module BestInPlace
       options[:data]['bip-skip-blur'] = opts.has_key?(:skip_blur) ? opts[:skip_blur].presence : BestInPlace.skip_blur
 
       options[:data]['bip-url'] = url_for(opts[:url] || object)
+      options[:data]['bip-method'] = opts[:method] unless opts[:method].blank?
 
       if real_object.respond_to?(:new_record?) and real_object.new_record?
         options[:data]['bip-new-object'] = true

@@ -58,6 +58,7 @@ You are done!
 - Compatible with **select** dropdown with custom collections
 - Compatible with custom boolean values (same usage of **checkboxes**)
 - Compatible with **jQuery UI Datepickers**
+- Compatible with file **input** with **remotipart gem**
 - Sanitize HTML and trim spaces of user's input on user's choice
 - Displays server-side **validation** errors
 - Allows external activator
@@ -81,7 +82,7 @@ Params:
 
 Options:
 
-- **:as** It can be only [:input, :textarea, :select, :checkbox, :date] or if undefined it defaults to :input.
+- **:as** It can be only [:input, :textarea, :select, :checkbox, :date, :file] or if undefined it defaults to :input.
 - **:collection**: If you are using the :select type then you must specify the collection of values it takes as a hash where values represent the display text and keys are the option's value when selected. If you are using the :checkbox type you can specify the two values it can take, or otherwise they will default to Yes and No.
 - **:url**: URL to which the updating action will be sent. If not defined it defaults to the :object path.
 - **:place_holder**: The nil param defines the content displayed in case no value is defined for that field. It can be something like "click me to edit".
@@ -207,6 +208,18 @@ prepare a `$.datepicker.setDefaults` call with the preferences of your choice.
 
 More information about datepicker and setting defaults can be found
 [here](http://docs.jquery.com/UI/Datepicker/$.datepicker.setDefaults)
+
+### File
+
+    <%= best_in_place @user, :image, :as => :file %>
+
+In order to upload files using Ajax you need to install "remotipart gem".
+
+    gem 'remotipart', '~> 1.2'
+
+With the :file type, OK and Cancel buttons is always displayed.
+If you not specify **:ok_button** option, "OK" button is displayed,
+and similarly, "Cancel" button is displayed.
 
 ## Controller response with respond_with_bip
 

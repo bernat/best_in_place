@@ -59,6 +59,17 @@ module BestInPlace
       options[:data]['bip-confirm'] = opts[:confirm].presence
       options[:data]['bip-value'] = html_escape(value).presence
 
+      if type == :checkbox
+        options[:data]['bip-true-class'] = opts[:true_class]
+        options[:data]['bip-false-class'] = opts[:false_class]
+        if value == true.to_s
+          options[:class] = options[:class] << opts[:true_class]
+        else
+          options[:class] = options[:class] << opts[:false_class]
+        end
+      end
+
+
       if opts[:raw]
         options[:data]['bip-raw'] = 'true'
       end
@@ -88,7 +99,7 @@ module BestInPlace
                     :activator, :cancel_button, :cancel_button_class, :html_attrs, :inner_class, :nil,
                     :object_name, :ok_button, :ok_button_class, :display_as, :display_with, :path, :value,
                     :use_confirm, :confirm, :sanitize, :raw, :helper_options, :url, :place_holder, :class,
-                    :as, :param, :container]
+                    :as, :param, :container, :true_class, :false_class]
       uknown_keys = opts.keys - known_keys
       uknown_keys.each { |key| options[key] = opts[key] }
     end

@@ -13,10 +13,11 @@ gem "combustion"
 gem "sprockets-rails"
 gem "capybara"
 gem "poltergeist"
-gem "sqlite3"
 gem "appraisal"
 gem "launchy"
+gem "webrick"
 gem "rails", github: "rails/rails", branch: "5-1-stable"
+gem "sqlite3"
 
 platforms :mri_21 do
   gem "byebug"

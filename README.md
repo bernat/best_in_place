@@ -26,21 +26,25 @@ After that, specify the use of the jquery and best in place
 javascripts in your application.js, and optionally specify jquery-ui if
 you want to use jQuery UI datepickers:
 
-    //= require jquery
-    //= require best_in_place
+```javascript
+//= require jquery
+//= require best_in_place
 
-    //= require jquery-ui
-    //= require best_in_place.jquery-ui
+//= require jquery-ui
+//= require best_in_place.jquery-ui
+```
 
 If you want to use jQuery UI datepickers, you should also install and
 load your preferred jquery-ui CSS file and associated assets.
 
 Then, just add a binding to prepare all best in place fields when the document is ready:
 
-    $(document).ready(function() {
-      /* Activating Best In Place */
-      jQuery(".best_in_place").best_in_place();
-    });
+```javascript
+$(document).ready(function() {
+  /* Activating Best In Place */
+  jQuery(".best_in_place").best_in_place();
+});
+```
 
 You are done!
 
@@ -105,7 +109,9 @@ If you provide an option that is not explicitly a best_in_place option it will b
 
 So, for instance, if you want to add an HTML tab index to the best_in_place span just add it to your method call:
 
-    <%= best_in_place @user, :name, tabindex: "1" %>
+```erb
+<%= best_in_place @user, :name, tabindex: "1" %>
+```
 
 ### best_in_place_if
 **best_in_place_if condition, object, field, OPTIONS**
@@ -119,15 +125,21 @@ condition, is satisfied. Specifically:
 
 Say we have something like
 
-    <%= best_in_place_if condition, @user, :name, :as => :input %>
+```erb
+<%= best_in_place_if condition, @user, :name, :as => :input %>
+```
 
 In case *condition* is satisfied, the outcome will be just the same as:
 
-    <%= best_in_place @user, :name, :as => :input %>
+```erb
+<%= best_in_place @user, :name, :as => :input %>
+```
 
 Otherwise, we will have the same outcome as:
 
-    <%= @user.name %>
+```erb
+<%= @user.name %>
+```
 
 It is a very useful feature to use with, for example, [Ryan Bates](https://github.com/ryanb)' [CanCan](https://github.com/ryanb/cancan), so we only allow BIP edition if the current user has permission to do it.
 
@@ -139,41 +151,53 @@ Examples (code in the views):
 
 ### Input
 
-    <%= best_in_place @user, :name, :as => :input %>
+```erb
+<%= best_in_place @user, :name, :as => :input %>
 
-    <%= best_in_place @user, :name, :as => :input, :place_holder => "Click me to add content!" %>
+<%= best_in_place @user, :name, :as => :input, :place_holder => "Click me to add content!" %>
+```
 
 ### Textarea
 
-    <%= best_in_place @user, :description, :as => :textarea %>
+```erb
+<%= best_in_place @user, :description, :as => :textarea %>
 
-    <%= best_in_place @user, :favorite_books, :as => :textarea, :ok_button => 'Save', :cancel_button => 'Cancel' %>
+<%= best_in_place @user, :favorite_books, :as => :textarea, :ok_button => 'Save', :cancel_button => 'Cancel' %>
+```
 
 ### Select
 
-    <%= best_in_place @user, :country, :as => :select, :collection => {"1" => "Spain", "2" => "Italy", "3" => "Germany", "4" => "France"} %>
-    <%= best_in_place @user, :country, :as => :select, :collection => { es: 'Spain', it: 'Italy', de: 'Germany', fr: 'France' } %>
-    <%= best_in_place @user, :country, :as => :select, :collection => %w(Spain Italy Germany France) %>
-    <%= best_in_place @user, :country, :as => :select, :collection => [[1, 'Spain'], [3, 'Germany'], [2, 'Italy'], [4, 'France']] %>
+```erb
+<%= best_in_place @user, :country, :as => :select, :collection => {"1" => "Spain", "2" => "Italy", "3" => "Germany", "4" => "France"} %>
+<%= best_in_place @user, :country, :as => :select, :collection => { es: 'Spain', it: 'Italy', de: 'Germany', fr: 'France' } %>
+<%= best_in_place @user, :country, :as => :select, :collection => %w(Spain Italy Germany France) %>
+<%= best_in_place @user, :country, :as => :select, :collection => [[1, 'Spain'], [3, 'Germany'], [2, 'Italy'], [4, 'France']] %>
+```
 
 Of course it can take an instance or global variable for the collection, just remember the structure is a hash.
 The value will always be converted to a string for display.
 
 ### Checkbox
 
-    <%= best_in_place @user, :receive_emails, as: :checkbox, collection: ["No, thanks", "Yes, of course!"] %>
-    <%= best_in_place @user, :receive_emails, as: :checkbox, collection: {false: "Nope", true: "Yep"} %>
+```erb
+<%= best_in_place @user, :receive_emails, as: :checkbox, collection: ["No, thanks", "Yes, of course!"] %>
+<%= best_in_place @user, :receive_emails, as: :checkbox, collection: {false: "Nope", true: "Yep"} %>
+```
 
 If you use array as a collection, the first value is always the negative boolean value and the second the positive. Structure: `["false value", "true value"]`.
 If not defined, it will default to *Yes* and *No* options.
 Default true and false values are stored in locales
 
-    t(:'best_in_place.yes', default: 'Yes')
-    t(:'best_in_place.no', default: 'No')
+```ruby
+t(:'best_in_place.yes', default: 'Yes')
+t(:'best_in_place.no', default: 'No')
+```
 
 ### Date
 
-    <%= best_in_place @user, :birth_date, :as => :date %>
+```erb
+<%= best_in_place @user, :birth_date, :as => :date %>
+```
 
 With the :date type the input field will be initialized as a datepicker input.
 In order to provide custom options to the datepicker initialization you must
@@ -188,19 +212,21 @@ Best in place provides a utility method you should use in your controller in
 order to provide the response that is expected by the javascript side, using
 the :json format. This is a simple example showing an update action using it:
 
-    def update
-      @user = User.find params[:id]
+```ruby
+def update
+  @user = User.find params[:id]
 
-      respond_to do |format|
-        if @user.update_attributes(params[:user])
-          format.html { redirect_to(@user, :notice => 'User was successfully updated.') }
-          format.json { respond_with_bip(@user) }
-        else
-          format.html { render :action => "edit" }
-          format.json { respond_with_bip(@user) }
-        end
-      end
+  respond_to do |format|
+    if @user.update(params[:user])
+      format.html { redirect_to(@user, :notice => 'User was successfully updated.') }
+      format.json { respond_with_bip(@user) }
+    else
+      format.html { render :action => "edit" }
+      format.json { respond_with_bip(@user) }
     end
+  end
+end
+```
 
 
 ## Custom display methods
@@ -210,7 +236,9 @@ the :json format. This is a simple example showing an update action using it:
 As of best in place 1.0.3 you can use custom methods in your model in order to
 decide how a certain field has to be displayed. You can write something like:
 
-    = best_in_place @user, :description, :as => :textarea, :display_as => :mk_description
+```
+= best_in_place @user, :description, :as => :textarea, :display_as => :mk_description
+```
 
 Then instead of using `@user.description` to show the actual value, best in
 place will call `@user.mk_description`. This can be used for any kind of
@@ -223,16 +251,22 @@ helper to render the attribute, like `number_to_currency` or `simple_format`.
 As of version 1.0.4 best in place provides this feature using the
 `display_with` option. You can use it like this:
 
-    = best_in_place @user, :money, :display_with => :number_to_currency
+```
+= best_in_place @user, :money, :display_with => :number_to_currency
+```
 
 If you want to pass further arguments to the helper you can do it providing an
 additional `helper_options` hash:
 
-    = best_in_place @user, :money, :display_with => :number_to_currency, :helper_options => {:unit => "€"}
+```
+= best_in_place @user, :money, :display_with => :number_to_currency, :helper_options => {:unit => "€"}
+```
 
 You can also pass in a proc or lambda like this:
 
-    = best_in_place @post, :body, :display_with => lambda { |v| textilize(v).html_safe }
+```
+= best_in_place @post, :body, :display_with => lambda { |v| textilize(v).html_safe }
+```
 
 ## Ajax success callback
 
@@ -240,26 +274,35 @@ You can also pass in a proc or lambda like this:
 
 The 'ajax:success' event is triggered upon success. Use bind:
 
-    $('.best_in_place').bind("ajax:success", function () {$(this).closest('tr').effect('highlight'); });
+```javascript
+$('.best_in_place').bind("ajax:success", function () {$(this).closest('tr').effect('highlight'); });
+```
 
 To bind a callback that is specific to a particular field, use the 'classes' option in the helper method and
 then bind to that class.
 
-    <%= best_in_place @user, :name, :classes => 'highlight_on_success' %>
-    <%= best_in_place @user, :mail, :classes => 'bounce_on_success' %>
-
-    $('.highlight_on_success').bind("ajax:success", function(){$(this).closest('tr').effect('highlight');});
-    $('.bounce_on_success').bind("ajax:success", function(){$(this).closest('tr').effect('bounce');});
+```erb
+<%= best_in_place @user, :name, :classes => 'highlight_on_success' %>
+<%= best_in_place @user, :mail, :classes => 'bounce_on_success' %>
+```
+```javascript
+$('.highlight_on_success').bind("ajax:success", function(){$(this).closest('tr').effect('highlight');});
+$('.bounce_on_success').bind("ajax:success", function(){$(this).closest('tr').effect('bounce');});
+```
 
 ### Providing data to the callback
 
 Use the :data option to add HTML5 data attributes to the best_in_place span. For example, in your view:
 
-    <%= best_in_place @user, :name, :data => {:user_name => @user.name} %>
+```erb
+<%= best_in_place @user, :name, :data => {:user_name => @user.name} %>
+```
 
 And in your javascript:
 
-    $('.best_in_place').bind("ajax:success", function(){ alert('Name updated for '+$(this).data('userName')); });
+```javascript
+$('.best_in_place').bind("ajax:success", function(){ alert('Name updated for '+$(this).data('userName')); });
+```
 
 ## Non Active Record environments
 We are not planning to support other ORMs apart from Active Record, at least for now. So, you can perfectly consider the following workaround as *the right way* until a specific implementation is done for your ORM.
@@ -268,68 +311,75 @@ Best In Place automatically assumes that Active Record is the ORM you are using.
 
 Let's setup an example so we can illustrate how to use Best In Place too in a non-ORM case. Imagine you have an awesome ice cream shop, and you have a model representing a single type of ice cream. The IceCream model has a name, a description, a... nevermind. The thing is that it also has a stock, which is a combination of flavour and size. A big chocolate ice cream (yummy!), a small paella ice cream (...really?), and so on. Shall we see some code?
 
-    class IceCream < ActiveRecord::Base
-      serialize :stock, Hash
+```ruby
+class IceCream < ActiveRecord::Base
+  serialize :stock, Hash
 
-      # consider the get_stock and set_stock methods are already defined
-    end
+  # consider the get_stock and set_stock methods are already defined
+end
+```
 
 Imagine we want to have a grid showing all the combinations of flavour and size and, for each combination, an editable stock. Since the stock for a flavour and a size is not a single and complete model attribute, we cannot use Best In Place *directly*. But we can set it up with an easy workaround.
 
 In the view, we'd do:
 
-    // @ice_cream is already available
-    - flavours = ... // get them somewhere
-    - sizes = ... // get them somewhere
-    table
-      tr
-        - flavours.each do |flavour|
-          th= flavour
-      - sizes.each do |size|
-        tr
-          th= size
-          - flavours.each do |flavour|
-            - v = @ice_cream.get_stock(flavour: flavour, size: size)
-            td= best_in_place v, :to_i, as: :input, url: set_stock_ice_cream_path(flavour: flavour, size: size)
+```slim
+// @ice_cream is already available
+- flavours = ... // get them somewhere
+- sizes = ... // get them somewhere
+table
+  tr
+    - flavours.each do |flavour|
+      th= flavour
+  - sizes.each do |size|
+    tr
+      th= size
+      - flavours.each do |flavour|
+        - v = @ice_cream.get_stock(flavour: flavour, size: size)
+        td= best_in_place v, :to_i, as: :input, url: set_stock_ice_cream_path(flavour: flavour, size: size)
+```
 
 Now we need a route to which send the stock updates:
 
-    TheAwesomeIceCreamShop::Application.routes.draw do
-      ...
+```ruby
+TheAwesomeIceCreamShop::Application.routes.draw do
+  ...
 
-      resources :ice_creams, :only => :none do
-        member do
-          put :set_stock
-        end
-      end
-
-      ...
+  resources :ice_creams, :only => :none do
+    member do
+      put :set_stock
     end
+  end
+
+  ...
+end
+```
 
 And finally we need a controller:
 
+```ruby
+class IceCreamsController < ApplicationController::Base
+  respond_to :html, :json
 
-    class IceCreamsController < ApplicationController::Base
-      respond_to :html, :json
+  ...
 
-      ...
+  def set_stock
+    flavour = params[:flavour]
+    size = params[:size]
+    new_stock = (params["fixnum"] || {})["to_i"]
 
-      def set_stock
-        flavour = params[:flavour]
-        size = params[:size]
-        new_stock = (params["fixnum"] || {})["to_i"]
-
-        @ice_cream.set_stock(new_stock, { :flavour => flavour, :size => size })
-        if @ice_cream.save
-          head :ok
-        else
-          render :json => @ice_cream.errors.full_messages, :status => :unprocessable_entity
-        end
-      end
-
-      ...
-
+    @ice_cream.set_stock(new_stock, { :flavour => flavour, :size => size })
+    if @ice_cream.save
+      head :ok
+    else
+      render :json => @ice_cream.errors.full_messages, :status => :unprocessable_entity
     end
+  end
+
+  ...
+
+end
+```
 
 And this is how it is done!
 
@@ -337,11 +387,12 @@ And this is how it is done!
 
 You can configure some global options for best_in_place. Currently these options are available:
 
-    BestInPlace.configure do |config|
-      config.container = :div
-      config.skip_blur = true
-    end
-
+```ruby
+BestInPlace.configure do |config|
+  config.container = :div
+  config.skip_blur = true
+end
+```
 
 ## Notification
 
@@ -349,8 +400,10 @@ Sometimes your in-place updates will fail due to validation or for some other re
 
 To opt into the jquery.purr error notification, just add best_in_place.purr to your javascripts, as described below.
 
-    //= require jquery.purr
-    //= require best_in_place.purr
+```javascript
+//= require jquery.purr
+//= require best_in_place.purr
+```
 
 If you'd like to develop your own custom form of error notification, you can use best_in_place.purr as an example to guide you.
 
@@ -358,8 +411,10 @@ If you'd like to develop your own custom form of error notification, you can use
 
 If the script is used with the Rails Gem no html tags will be allowed unless the sanitize option is set to true, in that case only the tags [*b i u s a strong em p h1 h2 h3 h4 h5 ul li ol hr pre span img*] will be allowed. If the script is used without the gem and with frameworks other than Rails, then you should make sure you are providing the csrf authenticity params as meta tags and you should always escape undesired html tags such as script, object and so forth.
 
-    <meta name="csrf-param" content="authenticity_token"/>
-    <meta name="csrf-token" content="YOUR UNIQUE TOKEN HERE"/>
+```html
+<meta name="csrf-param" content="authenticity_token"/>
+<meta name="csrf-token" content="YOUR UNIQUE TOKEN HERE"/>
+```
 
 ---
 

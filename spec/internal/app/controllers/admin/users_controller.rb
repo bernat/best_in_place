@@ -6,7 +6,7 @@ class Admin::UsersController < ApplicationController
   def update
     @user = User.find(params[:id])
     respond_to do |format|
-      @user.update_attributes(user_params)
+      @user.update(user_params)
       format.json { respond_with_bip(@user, param: :admin) }
     end
   end

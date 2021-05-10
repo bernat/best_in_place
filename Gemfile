@@ -14,9 +14,9 @@ gem 'combustion'
 gem 'sprockets-rails'
 gem 'capybara'
 gem 'poltergeist'
-gem 'sqlite3'
 gem 'appraisal'
 gem 'launchy'
+gem 'webrick'
 
 platforms :mri_21 do
   gem 'byebug'

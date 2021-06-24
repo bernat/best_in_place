@@ -5,6 +5,14 @@
   <%= stylesheet_link_tag "application" %>
   <%= javascript_include_tag "application" %>
   <%= csrf_meta_tag %>
+  <script>
+      $(document).ready(function() {
+          /* Activating Best In Place */
+          jQuery(".best_in_place").best_in_place({
+              eventType: '<%= @event_type || 'click' %>'
+          });
+      });
+  </script>
 </head>
 <body>
 

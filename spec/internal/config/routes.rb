@@ -13,6 +13,7 @@ Rails.application.routes.draw do
 
   namespace :admin do
     resources :users
+    resources :test_results, only: [:create, :update]
   end
 
   root :to => "users#index"

@@ -21,6 +21,8 @@ class User < ActiveRecord::Base
   alias_attribute :receive_email_image, :receive_email
   alias_attribute :description_simple, :description
 
+  has_many :test_results
+
   def address_format
     "<b>addr => [#{address}]</b>".html_safe
   end
@@ -31,5 +33,11 @@ class User < ActiveRecord::Base
 
   def zip_format
     nil
+  end
+
+  def tests
+    TestResult::AVAILABLE_TESTS.map do |test_type|
+      test_results.where(name: test_type).first || TestResult.new(name: test_type, user_id: id)
+    end
   end
 end

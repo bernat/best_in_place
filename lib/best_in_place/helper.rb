@@ -50,6 +50,12 @@ module BestInPlace
 
       options[:data]['bip-url'] = url_for(opts[:url] || object)
 
+      if real_object.respond_to?(:new_record?) and real_object.new_record?
+        options[:data]['bip-new-object'] = true
+        # collect name => value map of unsaved attributes to be serialized
+        options[:data]['bip-extra-payload'] = Hash[real_object.changes.map { |k,v| [k, v[1]] }]
+      end
+
       options[:data]['bip-confirm'] = opts[:confirm].presence
       options[:data]['bip-value'] = html_escape(value).presence
 

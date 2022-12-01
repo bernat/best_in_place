@@ -96,13 +96,13 @@
     <tr>
       <td>User description</td>
       <td id="description">
-        <%= best_in_place @user, :description, :display_as => :markdown_desc, as: :textarea, :raw => true %>
+        <%= best_in_place @user, :description, as: :textarea, raw: true %>
       </td>
     </tr>
     <tr>
       <td>Simple-formatted user description</td>
       <td id="dw_description">
-        <%= best_in_place @user, :description_simple, :display_with => :simple_format, as: :textarea %>
+        <%= best_in_place @user, :description_simple, display_with: :simple_format, as: :textarea %>
       </td>
     </tr>
     <tr>

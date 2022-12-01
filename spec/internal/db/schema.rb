@@ -24,4 +24,10 @@ ActiveRecord::Schema.define do
     t.string   "favorite_locale"
     t.integer  "zero_field"
   end
+
+  create_table "test_results", :force => true do |t|
+    t.string   "name"
+    t.string   "result"
+    t.integer  "user_id"
+  end
 end

@@ -8,7 +8,9 @@ spec/internal/.bundle
 spec/internal/db/*.sqlite3
 spec/internal/log/*.log
 spec/internal/tmp/**/*
+spec/internal/local
 
 .rvmrc
 coverage
 tmp
+failifier.txt

@@ -18,6 +18,9 @@ gem 'sqlite3'
 gem 'appraisal'
 gem 'launchy'
 
+gem 'puma'
+gem 'phantomjs', :require => 'phantomjs/poltergeist'
+
 platforms :mri_21 do
   gem 'byebug'
 end

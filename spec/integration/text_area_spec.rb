@@ -16,13 +16,12 @@ describe "JS behaviour", :js => true do
   it "should be able to use bip_text to update a text area" do
     @user.save!
     visit user_path(@user)
-    expect(find('#description')).to have_content('User description')
+    expect(page.find('#description')).to have_content('User description')
 
     bip_area @user, :description, "A new description"
 
     visit user_path(@user)
-
-    expect(find('#description')).to have_content('A new description')
+    expect(page.find('#description')).to have_content('A new description')
   end
 
   it "should be able to use a bip_text with :display_with option" do

@@ -2,20 +2,31 @@ language: ruby
 sudo: false
 cache: bundler
 rvm:
-  - 2.1
-  - 1.9.3
-  - 2.2
-  - rbx-2
+  - 2.7.2
+  - 2.6.6
+  - 2.5.8
 
 env: "RAILS_ENV=test DISPLAY=:99.0"
 gemfile:
-  - gemfiles/rails_3.2.gemfile
-  - gemfiles/rails_4.0.gemfile
-  - gemfiles/rails_4.1.gemfile
   - gemfiles/rails_4.2.gemfile
+  - gemfiles/rails_5.0.gemfile
+  - gemfiles/rails_5.1.gemfile
+  - gemfiles/rails_6.1.gemfile
   - gemfiles/rails_edge.gemfile
 
 matrix:
   allow_failures:
     - gemfile: gemfiles/rails_edge.gemfile
-    - rvm: rbx-2
+  exclude:
+    - rvm: 2.4.1
+      gemfile: gemfiles/rails_3.2.gemfile
+    - rvm: 2.4.1
+      gemfile: gemfiles/rails_4.0.gemfile
+    - rvm: 2.4.1
+      gemfile: gemfiles/rails_4.1.gemfile
+
+before_install:
+  - mkdir travis-phantomjs
+  - wget https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-2.1.1-linux-x86_64.tar.bz2 -O $PWD/travis-phantomjs/phantomjs-2.1.1-linux-x86_64.tar.bz2
+  - tar -xvf $PWD/travis-phantomjs/phantomjs-2.1.1-linux-x86_64.tar.bz2 -C $PWD/travis-phantomjs
+  - export PATH=$PWD/travis-phantomjs/phantomjs-2.1.1-linux-x86_64/bin:$PATH

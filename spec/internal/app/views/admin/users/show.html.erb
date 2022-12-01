@@ -16,5 +16,19 @@
       </td>
     </tr>
   </table>
+
+  <table id="test-results-table">
+    <% @user.tests.each do |test| %>
+      <tr>
+        <td><%= test.name %></td>
+        <td>
+          <%= best_in_place [:admin, test], :result, as: test.options ? :select : :input,
+                                                     collection: test.options,
+                                                     id: "best_in_place_test_result_#{test.name_to_slug}_result"
+          %>
+        </td>
+      </tr>
+    <% end %>
+  </table>
 </div>
 

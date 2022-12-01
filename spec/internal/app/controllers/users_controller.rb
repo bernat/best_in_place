@@ -46,9 +46,10 @@ class UsersController < ApplicationController
   # PUT /users/1.xml
   def update
     @user = User.find(params[:id])
+    # puts "RUNNING UPDATE: #{user_params.inspect}"
 
     respond_to do |format|
-      if @user.update_attributes(user_params)
+      if @user.update(user_params)
         format.html { redirect_to(@user, :notice => 'User was successfully updated.') }
         format.json { respond_with_bip(@user) }
       else

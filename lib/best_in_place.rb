@@ -3,6 +3,10 @@ require 'action_view/railtie'
 require 'action_controller/railtie'
 
 module BestInPlace
+    def self.deprecator
+      @deprecator ||= ActiveSupport::Deprecation.new("1.0", "BestInPlace")
+    end
+
   def self.configure
     @configuration ||= Configuration.new
     yield @configuration if block_given?

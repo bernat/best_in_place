@@ -9,7 +9,6 @@ module BestInPlace
       options = {}
       options[:data] = HashWithIndifferentAccess.new(opts[:data])
       options[:data]['bip-type'] = type
-      options[:data]['bip-attribute'] = field
 
       real_object = best_in_place_real_object_for object
 
@@ -19,13 +18,34 @@ module BestInPlace
 
       if opts[:collection] or type == :checkbox
         collection = opts[:collection]
-        value = value.to_s
         collection = best_in_place_default_collection if collection.blank?
-        collection = best_in_place_collection_builder(type, collection)
-        display_value = collection.flat_map{|a| a[0].to_s == value ? a[1] : nil }.compact[0]
-        collection = collection.to_json
-        options[:data]['bip-collection'] = html_escape(collection)
+        if (value.is_a? ActiveRecord::Base) && (collection.is_a? ActiveRecord::Relation) && (collection.model == value.class)
+          bipCollection = []
+          indexField = opts[:indexField] || :id
+          collection.each do |collection_item|
+            item_index = collection_item[indexField]
+            if opts[:valueField]
+              item_display_value = collection_item[opts[:valueField]]
+            else
+              item_display_value = collection_item.to_s
+            end
+            bipCollection << [item_index,item_display_value];
+            if value == collection_item
+              display_value = item_display_value
+            end
+          end
+          field = field + '_' + indexField.to_s
+        else
+          value = value.to_s
+          bipCollection = best_in_place_collection_builder(type, collection)
+          display_value = bipCollection.flat_map{|a| a[0].to_s == value ? a[1] : nil }.compact[0]
+        end
+        bipCollectionAsJson = bipCollection.to_json
+        options[:data]['bip-collection'] = html_escape(bipCollectionAsJson)
       end
+
+      # this must come after the collection block in case the field name gets updated with _id
+      options[:data]['bip-attribute'] = field
 
       options[:class] = ['best_in_place'] + Array(opts[:class] || opts[:classes])
       options[:id] = opts[:id] || BestInPlace::Utils.build_best_in_place_id(real_object, field)

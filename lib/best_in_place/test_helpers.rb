@@ -8,6 +8,7 @@ module BestInPlace
       execute_script <<-JS
         $("##{id} form textarea").val('#{escape_javascript new_value.to_s}');
         $("##{id} form textarea").blur();
+        $("##{id} form").submit();
       JS
       wait_for_ajax
     end

@@ -16,6 +16,7 @@ gem 'poltergeist'
 gem 'sqlite3'
 gem 'appraisal'
 gem 'launchy'
+gem 'puma'
 
 gem 'puma'
 gem 'phantomjs', :require => 'phantomjs/poltergeist'

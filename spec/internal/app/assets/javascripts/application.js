@@ -6,12 +6,6 @@
 //= require best_in_place.purr
 //= require_self
 
-$(document).ready(function() {
-  /* Activating Best In Place */
-  jQuery(".best_in_place").best_in_place();
-});
-
-
 /* Inicialització en català per a l'extenció 'calendar' per jQuery. */
 /* Writers: (joan.leon@gmail.com). */
 jQuery(function($){
